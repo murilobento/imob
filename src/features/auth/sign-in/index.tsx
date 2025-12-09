@@ -16,10 +16,10 @@ export function SignIn() {
     <AuthLayout>
       <Card className='gap-4'>
         <CardHeader>
-          <CardTitle className='text-lg tracking-tight'>Sign in</CardTitle>
+          <CardTitle className='text-lg tracking-tight'>Entrar</CardTitle>
           <CardDescription>
-            Enter your email and password below to <br />
-            log into your account
+            Insira seu email e senha abaixo para <br />
+            acessar sua conta
           </CardDescription>
         </CardHeader>
         <CardContent>

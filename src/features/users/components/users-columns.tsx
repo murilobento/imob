@@ -1,5 +1,6 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -18,7 +19,7 @@ export const usersColumns: ColumnDef<User>[] = [
           (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label='Select all'
+        aria-label='Selecionar todos'
         className='translate-y-[2px]'
       />
     ),
@@ -29,7 +30,7 @@ export const usersColumns: ColumnDef<User>[] = [
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label='Select row'
+        aria-label='Selecionar linha'
         className='translate-y-[2px]'
       />
     ),
@@ -39,7 +40,7 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Name' />
+      <DataTableColumnHeader column={column} title='Nome' />
     ),
     cell: ({ row }) => (
       <LongText className='max-w-36 ps-3'>{row.getValue('name')}</LongText>
@@ -78,7 +79,7 @@ export const usersColumns: ColumnDef<User>[] = [
               : 'bg-neutral-300/40 border-neutral-300 text-neutral-600'
           )}
         >
-          {status}
+          {status === 'active' ? 'Ativo' : 'Inativo'}
         </Badge>
       )
     },
@@ -90,11 +91,11 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     accessorKey: 'createdAt',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Created At' />
+      <DataTableColumnHeader column={column} title='Criado em' />
     ),
     cell: ({ row }) => {
       const date = row.getValue('createdAt') as Date
-      return <div className='text-nowrap'>{format(date, 'MMM dd, yyyy')}</div>
+      return <div className='text-nowrap'>{format(date, 'PPP', { locale: ptBR })}</div>
     },
   },
   {

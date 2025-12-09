@@ -14,11 +14,11 @@ export function ForgotPassword() {
       <Card className='gap-4'>
         <CardHeader>
           <CardTitle className='text-lg tracking-tight'>
-            Forgot Password
+            Esqueceu a Senha?
           </CardTitle>
           <CardDescription>
-            Enter your registered email and <br /> we will send you a link to
-            reset your password.
+            Insira seu email cadastrado e <br /> enviaremos um link para
+            redefinir sua senha.
           </CardDescription>
         </CardHeader>
         <CardContent>

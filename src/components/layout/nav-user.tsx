@@ -90,31 +90,31 @@ export function NavUser({ user }: NavUserProps) {
                 <DropdownMenuItem asChild>
                   <Link to='/settings'>
                     <UserCog />
-                    Profile
+                    Perfil
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to='/settings/account'>
                     <Wrench />
-                    Account
+                    Conta
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to='/settings/appearance'>
                     <Palette />
-                    Appearance
+                    Aparência
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to='/settings/notifications'>
                     <Bell />
-                    Notifications
+                    Notificações
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to='/settings/display'>
                     <Monitor />
-                    Display
+                    Tela
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
@@ -124,7 +124,7 @@ export function NavUser({ user }: NavUserProps) {
                 onClick={() => setOpen(true)}
               >
                 <LogOut />
-                Sign out
+                Sair
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

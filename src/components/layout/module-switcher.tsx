@@ -67,7 +67,7 @@ export function ModuleSwitcher({ modules, activeModule, setActiveModule }: Modul
                         sideOffset={4}
                     >
                         <DropdownMenuLabel className='text-muted-foreground text-xs'>
-                            Modules
+                            Módulos
                         </DropdownMenuLabel>
                         {modules.map((module, index) => (
                             <DropdownMenuItem

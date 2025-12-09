@@ -15,7 +15,7 @@ export const sidebarData: SidebarData = {
   },
   modules: [
     {
-      name: 'General',
+      name: 'Geral',
       logo: GalleryVerticalEnd,
       plan: 'Dashboard',
       id: 'general'
@@ -23,13 +23,13 @@ export const sidebarData: SidebarData = {
     {
       name: 'Administrativo',
       logo: Command,
-      plan: 'Admin Tools',
+      plan: 'Ferramentas Admin',
       id: 'admin'
     },
   ],
   navGroups: [
     {
-      title: 'General',
+      title: 'Geral',
       moduleId: 'general',
       items: [
         {
@@ -44,12 +44,12 @@ export const sidebarData: SidebarData = {
       moduleId: 'admin',
       items: [
         {
-          title: 'Users',
+          title: 'Usuários',
           url: '/users',
           icon: Users,
         },
         {
-          title: 'Company Settings',
+          title: 'Configurações da Empresa',
           url: '/?modal=company-settings',
           icon: Building2,
         },

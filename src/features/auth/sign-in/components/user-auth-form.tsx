@@ -23,12 +23,12 @@ import { PasswordInput } from '@/components/password-input'
 
 const formSchema = z.object({
   email: z.email({
-    error: (iss) => (iss.input === '' ? 'Please enter your email' : undefined),
+    error: (iss) => (iss.input === '' ? 'Por favor insira seu email' : undefined),
   }),
   password: z
     .string()
-    .min(1, 'Please enter your password')
-    .min(7, 'Password must be at least 7 characters long'),
+    .min(1, 'Por favor insira sua senha')
+    .min(7, 'A senha deve ter pelo menos 7 caracteres'),
 })
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
@@ -63,16 +63,16 @@ export function UserAuthForm({
     if (error) {
       setIsLoading(false)
       if (error.message?.toLowerCase().includes('inactive')) {
-        toast.error('Your account is inactive. Please contact the administrator.')
+        toast.error('Sua conta está inativa. Por favor contate o administrador.')
       } else {
-        toast.error(error.message || 'Failed to sign in')
+        toast.error(error.message || 'Falha ao entrar')
       }
       return
     }
 
     if (session?.user) {
       auth.setUser(session.user)
-      toast.success(`Welcome back, ${session.user.email}!`)
+      toast.success(`Bem-vindo de volta, ${session.user.email}!`)
       const targetPath = redirectTo || '/'
       navigate({ to: targetPath, replace: true })
     }
@@ -94,7 +94,7 @@ export function UserAuthForm({
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder='name@example.com' {...field} />
+                <Input placeholder='nome@exemplo.com' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -105,7 +105,7 @@ export function UserAuthForm({
           name='password'
           render={({ field }) => (
             <FormItem className='relative'>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Senha</FormLabel>
               <FormControl>
                 <PasswordInput placeholder='********' {...field} />
               </FormControl>
@@ -114,14 +114,14 @@ export function UserAuthForm({
                 to='/forgot-password'
                 className='text-muted-foreground absolute end-0 -top-0.5 text-sm font-medium hover:opacity-75'
               >
-                Forgot password?
+                Esqueceu a senha?
               </Link>
             </FormItem>
           )}
         />
         <Button className='mt-2' disabled={isLoading}>
           {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
-          Sign in
+          Entrar
         </Button>
 
 

@@ -32,9 +32,9 @@ import { useUsers } from './users-provider'
 
 const formSchema = z
   .object({
-    name: z.string().min(1, 'Name is required.'),
-    email: z.email({ message: 'Email is required.' }),
-    status: z.string().min(1, 'Status is required'),
+    name: z.string().min(1, 'Nome é obrigatório.'),
+    email: z.email({ message: 'Email é obrigatório.' }),
+    status: z.string().min(1, 'Status é obrigatório'),
     password: z.string().transform((pwd) => pwd.trim()),
     confirmPassword: z.string().transform((pwd) => pwd.trim()),
     isEdit: z.boolean(),
@@ -44,7 +44,7 @@ const formSchema = z
       if (data.isEdit) return true
       return data.password.length > 0
     },
-    { message: 'Password is required.', path: ['password'] }
+    { message: 'Senha é obrigatória.', path: ['password'] }
   )
   .refine(
     ({ isEdit, password }) => {
@@ -52,14 +52,14 @@ const formSchema = z
       if (!password) return true
       return password.length >= 8
     },
-    { message: 'Password must be at least 8 characters.', path: ['password'] }
+    { message: 'A senha deve ter pelo menos 8 caracteres.', path: ['password'] }
   )
   .refine(
     ({ isEdit, password, confirmPassword }) => {
       if (isEdit && !password) return true
       return password === confirmPassword
     },
-    { message: "Passwords don't match.", path: ['confirmPassword'] }
+    { message: "As senhas não coincidem.", path: ['confirmPassword'] }
   )
 
 type UserForm = z.infer<typeof formSchema>
@@ -98,16 +98,16 @@ export function UsersActionDialog({
           status: values.status,
           ...(values.password ? { password: values.password } : {}),
         })
-        toast.success('User updated successfully')
+        toast.success('Usuário atualizado com sucesso')
       } else {
         await createUser({ name: values.name, email: values.email, status: values.status, password: values.password })
-        toast.success('User created successfully')
+        toast.success('Usuário criado com sucesso')
       }
       form.reset()
       onOpenChange(false)
       onSuccess()
     } catch {
-      toast.error(isEdit ? 'Failed to update user' : 'Failed to create user')
+      toast.error(isEdit ? 'Falha ao atualizar usuário' : 'Falha ao criar usuário')
     } finally {
       setIsLoading(false)
     }
@@ -125,12 +125,12 @@ export function UsersActionDialog({
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
-          <DialogTitle>{isEdit ? (readOnly ? 'View User' : 'Edit User') : 'Add New User'}</DialogTitle>
+          <DialogTitle>{isEdit ? (readOnly ? 'Visualizar Usuário' : 'Editar Usuário') : 'Adicionar Novo Usuário'}</DialogTitle>
           <DialogDescription>
             {isEdit
-              ? (readOnly ? 'View user details.' : 'Update the user here.')
-              : 'Create new user here.'}
-            {!readOnly && " Click save when you're done."}
+              ? (readOnly ? 'Detalhes do usuário.' : 'Atualize o usuário aqui.')
+              : 'Crie um novo usuário aqui.'}
+            {!readOnly && " Clique em salvar quando terminar."}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -144,7 +144,7 @@ export function UsersActionDialog({
               name='name'
               render={({ field }) => (
                 <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                  <FormLabel className='col-span-2 text-end'>Name</FormLabel>
+                  <FormLabel className='col-span-2 text-end'>Nome</FormLabel>
                   <FormControl>
                     <Input placeholder='John Doe' className='col-span-4' autoComplete='off' {...field} disabled={readOnly || isLoading} />
                   </FormControl>
@@ -188,11 +188,11 @@ export function UsersActionDialog({
               render={({ field }) => (
                 <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                   <FormLabel className='col-span-2 text-end'>
-                    {isEdit ? 'New Password' : 'Password'}
+                    {isEdit ? 'Nova Senha' : 'Senha'}
                   </FormLabel>
                   <FormControl>
                     <PasswordInput
-                      placeholder={isEdit ? 'Leave blank to keep current' : '********'}
+                      placeholder={isEdit ? 'Deixe em branco para manter a atual' : '********'}
                       className='col-span-4'
                       {...field}
                       disabled={readOnly || isLoading}
@@ -207,10 +207,10 @@ export function UsersActionDialog({
               name='confirmPassword'
               render={({ field }) => (
                 <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                  <FormLabel className='col-span-2 text-end'>Confirm Password</FormLabel>
+                  <FormLabel className='col-span-2 text-end'>Confirmar Senha</FormLabel>
                   <FormControl>
                     <PasswordInput
-                      placeholder={isEdit ? 'Leave blank to keep current' : '********'}
+                      placeholder={isEdit ? 'Deixe em branco para manter a atual' : '********'}
                       className='col-span-4'
                       {...field}
                       disabled={readOnly || isLoading || !isPasswordTouched}
@@ -226,14 +226,14 @@ export function UsersActionDialog({
           {!readOnly ? (
             <Button type='submit' form='user-form' disabled={isLoading}>
               {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
-              Save changes
+              Salvar alterações
             </Button>
           ) : (
             <Button type='button' onClick={(e) => {
               e.preventDefault()
               onOpenChange(false)
             }}>
-              Close
+              Fechar
             </Button>
           )}
         </DialogFooter>

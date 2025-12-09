@@ -28,7 +28,7 @@ export function Users() {
       const data = await fetchUsers()
       setUsers(data)
     } catch {
-      toast.error('Failed to load users')
+      toast.error('Falha ao carregar usuários')
     } finally {
       setIsLoading(false)
     }
@@ -52,16 +52,16 @@ export function Users() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>User List</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>Lista de Usuários</h2>
             <p className='text-muted-foreground'>
-              Manage your users and their roles here.
+              Gerencie seus usuários e suas funções aqui.
             </p>
           </div>
           <UsersPrimaryButtons />
         </div>
         {isLoading ? (
           <div className='flex items-center justify-center py-10'>
-            <div className='text-muted-foreground'>Loading users...</div>
+            <div className='text-muted-foreground'>Carregando usuários...</div>
           </div>
         ) : (
           <UsersTable data={users} search={search} navigate={navigate} />

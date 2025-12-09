@@ -1,5 +1,6 @@
 import { type Table } from '@tanstack/react-table'
 import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import { Trash2, UserPen } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
@@ -19,7 +20,7 @@ export function UsersCardList({ table }: UsersCardListProps) {
   if (!rows.length) {
     return (
       <div className='flex items-center justify-center py-10 text-muted-foreground'>
-        No results.
+        Nenhum resultado encontrado.
       </div>
     )
   }
@@ -41,7 +42,7 @@ export function UsersCardList({ table }: UsersCardListProps) {
               <Checkbox
                 checked={row.getIsSelected()}
                 onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label='Select row'
+                aria-label='Selecionar linha'
                 className='mt-1'
               />
               <div className='flex-1 min-w-0'>
@@ -51,19 +52,19 @@ export function UsersCardList({ table }: UsersCardListProps) {
                     variant='outline'
                     className={cn(
                       'capitalize text-xs shrink-0',
-                      user.emailVerified
+                      user.status === 'active'
                         ? 'bg-teal-100/30 text-teal-900 dark:text-teal-200 border-teal-200'
                         : 'bg-neutral-300/40 border-neutral-300'
                     )}
                   >
-                    {user.emailVerified ? 'Verified' : 'Unverified'}
+                    {user.status === 'active' ? 'Ativo' : 'Inativo'}
                   </Badge>
                 </div>
                 <p className='text-sm text-muted-foreground truncate'>
                   {user.email}
                 </p>
                 <p className='text-xs text-muted-foreground mt-1'>
-                  {format(user.createdAt, 'MMM dd, yyyy')}
+                  {format(user.createdAt, 'PPP', { locale: ptBR })}
                 </p>
               </div>
               <div className='flex gap-1 shrink-0'>
@@ -77,7 +78,7 @@ export function UsersCardList({ table }: UsersCardListProps) {
                   }}
                 >
                   <UserPen size={16} />
-                  <span className='sr-only'>Edit</span>
+                  <span className='sr-only'>Editar</span>
                 </Button>
                 <Button
                   variant='ghost'
@@ -89,7 +90,7 @@ export function UsersCardList({ table }: UsersCardListProps) {
                   }}
                 >
                   <Trash2 size={16} />
-                  <span className='sr-only'>Delete</span>
+                  <span className='sr-only'>Excluir</span>
                 </Button>
               </div>
             </div>

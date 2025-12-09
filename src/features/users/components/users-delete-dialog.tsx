@@ -32,12 +32,12 @@ export function UsersDeleteDialog({
     setIsLoading(true)
     try {
       await deleteUser(currentRow.id)
-      toast.success('User deleted successfully')
+      toast.success('Usuário excluído com sucesso')
       onOpenChange(false)
       setValue('')
       onSuccess()
     } catch {
-      toast.error('Failed to delete user')
+      toast.error('Falha ao excluir usuário')
     } finally {
       setIsLoading(false)
     }
@@ -56,16 +56,16 @@ export function UsersDeleteDialog({
           ) : (
             <AlertTriangle className='stroke-destructive me-1 inline-block' size={18} />
           )}
-          Delete User
+          Excluir Usuário
         </span>
       }
       desc={
         <div className='space-y-4'>
           <p className='mb-2'>
-            Are you sure you want to delete{' '}
+            Tem certeza que deseja excluir{' '}
             <span className='font-bold'>{currentRow.name}</span>?
             <br />
-            This action will permanently remove the user from the system. This cannot be undone.
+            Esta ação removerá permanentemente o usuário do sistema. Isso não pode ser desfeito.
           </p>
 
           <Label className='my-2'>
@@ -73,19 +73,19 @@ export function UsersDeleteDialog({
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder='Enter email to confirm deletion.'
+              placeholder='Digite o email para confirmar a exclusão.'
             />
           </Label>
 
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>Atenção!</AlertTitle>
             <AlertDescription>
-              Please be careful, this operation can not be rolled back.
+              Por favor, tenha cuidado, esta operação não pode ser revertida.
             </AlertDescription>
           </Alert>
         </div>
       }
-      confirmText='Delete'
+      confirmText='Excluir'
       destructive
     />
   )

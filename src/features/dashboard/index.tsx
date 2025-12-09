@@ -47,13 +47,13 @@ export function Dashboard() {
         >
           <div className='w-full overflow-x-auto pb-2'>
             <TabsList>
-              <TabsTrigger value='overview'>Overview</TabsTrigger>
+              <TabsTrigger value='overview'>Visão Geral</TabsTrigger>
               <TabsTrigger value='analytics'>Analytics</TabsTrigger>
               <TabsTrigger value='reports' disabled>
-                Reports
+                Relatórios
               </TabsTrigger>
               <TabsTrigger value='notifications' disabled>
-                Notifications
+                Notificações
               </TabsTrigger>
             </TabsList>
           </div>
@@ -62,7 +62,7 @@ export function Dashboard() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Total Revenue
+                    Receita Total
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -80,14 +80,14 @@ export function Dashboard() {
                 <CardContent>
                   <div className='text-2xl font-bold'>$45,231.89</div>
                   <p className='text-muted-foreground text-xs'>
-                    +20.1% from last month
+                    +20.1% em relação ao mês anterior
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Subscriptions
+                    Assinaturas
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -107,13 +107,13 @@ export function Dashboard() {
                 <CardContent>
                   <div className='text-2xl font-bold'>+2350</div>
                   <p className='text-muted-foreground text-xs'>
-                    +180.1% from last month
+                    +180.1% em relação ao mês anterior
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>Sales</CardTitle>
+                  <CardTitle className='text-sm font-medium'>Vendas</CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     viewBox='0 0 24 24'
@@ -131,14 +131,14 @@ export function Dashboard() {
                 <CardContent>
                   <div className='text-2xl font-bold'>+12,234</div>
                   <p className='text-muted-foreground text-xs'>
-                    +19% from last month
+                    +19% em relação ao mês anterior
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Active Now
+                    Ativos Agora
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -156,7 +156,7 @@ export function Dashboard() {
                 <CardContent>
                   <div className='text-2xl font-bold'>+573</div>
                   <p className='text-muted-foreground text-xs'>
-                    +201 since last hour
+                    +201 desde a última hora
                   </p>
                 </CardContent>
               </Card>
@@ -164,7 +164,7 @@ export function Dashboard() {
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
               <Card className='col-span-1 lg:col-span-4'>
                 <CardHeader>
-                  <CardTitle>Overview</CardTitle>
+                  <CardTitle>Visão Geral</CardTitle>
                 </CardHeader>
                 <CardContent className='ps-2'>
                   <Overview />
@@ -172,9 +172,9 @@ export function Dashboard() {
               </Card>
               <Card className='col-span-1 lg:col-span-3'>
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
+                  <CardTitle>Vendas Recentes</CardTitle>
                   <CardDescription>
-                    You made 265 sales this month.
+                    Você fez 265 vendas este mês.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

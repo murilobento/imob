@@ -33,7 +33,7 @@ export function UsersMultiDeleteDialog<TData>({
 
   const handleDelete = async () => {
     if (value.trim() !== CONFIRM_WORD) {
-      toast.error(`Please type "${CONFIRM_WORD}" to confirm.`)
+      toast.error(`Por favor digite "${CONFIRM_WORD}" para confirmar.`)
       return
     }
 
@@ -41,13 +41,13 @@ export function UsersMultiDeleteDialog<TData>({
     try {
       const ids = selectedRows.map((row) => (row.original as User).id)
       await deleteUsers(ids)
-      toast.success(`Deleted ${selectedRows.length} ${selectedRows.length > 1 ? 'users' : 'user'}`)
+      toast.success(`Excluído(s) ${selectedRows.length} ${selectedRows.length > 1 ? 'usuários' : 'usuário'}`)
       table.resetRowSelection()
       setValue('')
       onOpenChange(false)
       onSuccess()
     } catch {
-      toast.error('Failed to delete users')
+      toast.error('Falha ao excluir usuários')
     } finally {
       setIsLoading(false)
     }
@@ -66,34 +66,34 @@ export function UsersMultiDeleteDialog<TData>({
           ) : (
             <AlertTriangle className='stroke-destructive me-1 inline-block' size={18} />
           )}
-          Delete {selectedRows.length} {selectedRows.length > 1 ? 'users' : 'user'}
+          Excluir {selectedRows.length} {selectedRows.length > 1 ? 'usuários' : 'usuário'}
         </span>
       }
       desc={
         <div className='space-y-4'>
           <p className='mb-2'>
-            Are you sure you want to delete the selected users? <br />
-            This action cannot be undone.
+            Tem certeza que deseja excluir os usuários selecionados? <br />
+            Esta ação não pode ser desfeita.
           </p>
 
           <Label className='my-4 flex flex-col items-start gap-1.5'>
-            <span>Confirm by typing "{CONFIRM_WORD}":</span>
+            <span>Confirme digitando "{CONFIRM_WORD}":</span>
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder={`Type "${CONFIRM_WORD}" to confirm.`}
+              placeholder={`Digite "${CONFIRM_WORD}" para confirmar.`}
             />
           </Label>
 
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>Atenção!</AlertTitle>
             <AlertDescription>
-              Please be careful, this operation can not be rolled back.
+              Por favor, tenha cuidado, esta operação não pode ser revertida.
             </AlertDescription>
           </Alert>
         </div>
       }
-      confirmText='Delete'
+      confirmText='Excluir'
       destructive
     />
   )

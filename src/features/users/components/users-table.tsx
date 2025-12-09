@@ -54,7 +54,7 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
     globalFilter: { enabled: false },
     columnFilters: [
       { columnId: 'name', searchKey: 'name', type: 'string' },
-      { columnId: 'emailVerified', searchKey: 'status', type: 'array' },
+      { columnId: 'status', searchKey: 'status', type: 'array' },
     ],
   })
 
@@ -96,11 +96,11 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
     >
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Filter users...'
+        searchPlaceholder='Filtrar usuários...'
         searchKey='name'
         filters={[
           {
-            columnId: 'emailVerified',
+            columnId: 'status',
             title: 'Status',
             options: userStatuses.map((s) => ({ ...s })),
           },
@@ -126,9 +126,9 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                       </TableHead>
                     )
                   })}
@@ -166,7 +166,7 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
                     colSpan={columns.length}
                     className='h-24 text-center'
                   >
-                    No results.
+                    Nenhum resultado encontrado.
                   </TableCell>
                 </TableRow>
               )}
