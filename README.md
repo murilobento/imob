@@ -31,17 +31,21 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
 Você precisará configurar as variáveis de ambiente para o frontend e para o servidor.
 
 ### 1. Frontend (.env)
+
 Na raiz do projeto, crie um arquivo `.env` baseando-se no exemplo:
 
 ```bash
 cp .env.example .env
 ```
+
 Certifique-se de que o `VITE_API_URL` está apontando para o seu backend (padrão é localhost:3000):
+
 ```env
 VITE_API_URL=http://localhost:3000
 ```
 
 ### 2. Backend (server/.env)
+
 Crie um arquivo `.env` dentro da pasta `server/`:
 
 ```bash
@@ -62,7 +66,7 @@ BETTER_AUTH_SECRET=sua_chave_secreta_super_segura
 BETTER_AUTH_URL=http://localhost:3000
 ```
 
-*Dica: Você pode gerar uma chave secreta rodando `openssl rand -base64 32` no terminal.*
+_Dica: Você pode gerar uma chave secreta rodando `openssl rand -base64 32` no terminal._
 
 ## 🗄️ Configuração do Banco de Dados
 
@@ -74,6 +78,7 @@ pnpm db:migrate
 ```
 
 Para popular o banco com dados iniciais (se disponível):
+
 ```bash
 pnpm --filter auth-server run db:seed
 ```

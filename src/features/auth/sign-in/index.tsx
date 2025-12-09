@@ -25,7 +25,6 @@ export function SignIn() {
         <CardContent>
           <UserAuthForm redirectTo={redirect} />
         </CardContent>
-
       </Card>
     </AuthLayout>
   )

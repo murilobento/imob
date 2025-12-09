@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Loader2, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
-
 import { useAuthStore } from '@/stores/auth-store'
 import { signIn } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
@@ -23,7 +22,8 @@ import { PasswordInput } from '@/components/password-input'
 
 const formSchema = z.object({
   email: z.email({
-    error: (iss) => (iss.input === '' ? 'Por favor insira seu email' : undefined),
+    error: (iss) =>
+      iss.input === '' ? 'Por favor insira seu email' : undefined,
   }),
   password: z
     .string()
@@ -63,7 +63,14 @@ export function UserAuthForm({
     if (error) {
       setIsLoading(false)
       if (error.message?.toLowerCase().includes('inactive')) {
-        toast.error('Sua conta está inativa. Por favor contate o administrador.')
+        toast.error(
+          'Sua conta está inativa. Por favor contate o administrador.'
+        )
+      } else if (
+        error.message?.toLowerCase().includes('invalid email') ||
+        error.message?.toLowerCase().includes('invalid credentials')
+      ) {
+        toast.error('Email ou senha inválidos.')
       } else {
         toast.error(error.message || 'Falha ao entrar')
       }
@@ -123,8 +130,6 @@ export function UserAuthForm({
           {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
           Entrar
         </Button>
-
-
       </form>
     </Form>
   )

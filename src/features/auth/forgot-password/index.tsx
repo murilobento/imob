@@ -24,7 +24,6 @@ export function ForgotPassword() {
         <CardContent>
           <ForgotPasswordForm />
         </CardContent>
-
       </Card>
     </AuthLayout>
   )

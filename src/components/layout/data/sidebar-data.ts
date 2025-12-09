@@ -18,13 +18,13 @@ export const sidebarData: SidebarData = {
       name: 'Geral',
       logo: GalleryVerticalEnd,
       plan: 'Dashboard',
-      id: 'general'
+      id: 'general',
     },
     {
       name: 'Administrativo',
       logo: Command,
       plan: 'Ferramentas Admin',
-      id: 'admin'
+      id: 'admin',
     },
   ],
   navGroups: [
@@ -55,6 +55,5 @@ export const sidebarData: SidebarData = {
         },
       ],
     },
-
   ],
 }

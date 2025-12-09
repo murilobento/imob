@@ -23,8 +23,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Switch } from '@/components/ui/switch'
 import { Input } from '@/components/ui/input'
+import { Switch } from '@/components/ui/switch'
 import { PasswordInput } from '@/components/password-input'
 import { createUser, updateUser } from '../api/users-api'
 import { type User } from '../data/schema'
@@ -59,7 +59,7 @@ const formSchema = z
       if (isEdit && !password) return true
       return password === confirmPassword
     },
-    { message: "As senhas não coincidem.", path: ['confirmPassword'] }
+    { message: 'As senhas não coincidem.', path: ['confirmPassword'] }
   )
 
 type UserForm = z.infer<typeof formSchema>
@@ -84,8 +84,22 @@ export function UsersActionDialog({
   const form = useForm<UserForm>({
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
-      ? { name: currentRow.name, email: currentRow.email, status: currentRow.status || 'active', password: '', confirmPassword: '', isEdit }
-      : { name: '', email: '', status: 'active', password: '', confirmPassword: '', isEdit },
+      ? {
+          name: currentRow.name,
+          email: currentRow.email,
+          status: currentRow.status || 'active',
+          password: '',
+          confirmPassword: '',
+          isEdit,
+        }
+      : {
+          name: '',
+          email: '',
+          status: 'active',
+          password: '',
+          confirmPassword: '',
+          isEdit,
+        },
   })
 
   const onSubmit = async (values: UserForm) => {
@@ -100,14 +114,21 @@ export function UsersActionDialog({
         })
         toast.success('Usuário atualizado com sucesso')
       } else {
-        await createUser({ name: values.name, email: values.email, status: values.status, password: values.password })
+        await createUser({
+          name: values.name,
+          email: values.email,
+          status: values.status,
+          password: values.password,
+        })
         toast.success('Usuário criado com sucesso')
       }
       form.reset()
       onOpenChange(false)
       onSuccess()
     } catch {
-      toast.error(isEdit ? 'Falha ao atualizar usuário' : 'Falha ao criar usuário')
+      toast.error(
+        isEdit ? 'Falha ao atualizar usuário' : 'Falha ao criar usuário'
+      )
     } finally {
       setIsLoading(false)
     }
@@ -125,12 +146,20 @@ export function UsersActionDialog({
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
-          <DialogTitle>{isEdit ? (readOnly ? 'Visualizar Usuário' : 'Editar Usuário') : 'Adicionar Novo Usuário'}</DialogTitle>
+          <DialogTitle>
+            {isEdit
+              ? readOnly
+                ? 'Visualizar Usuário'
+                : 'Editar Usuário'
+              : 'Adicionar Novo Usuário'}
+          </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? (readOnly ? 'Detalhes do usuário.' : 'Atualize o usuário aqui.')
+              ? readOnly
+                ? 'Detalhes do usuário.'
+                : 'Atualize o usuário aqui.'
               : 'Crie um novo usuário aqui.'}
-            {!readOnly && " Clique em salvar quando terminar."}
+            {!readOnly && ' Clique em salvar quando terminar.'}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -146,7 +175,13 @@ export function UsersActionDialog({
                 <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                   <FormLabel className='col-span-2 text-end'>Nome</FormLabel>
                   <FormControl>
-                    <Input placeholder='John Doe' className='col-span-4' autoComplete='off' {...field} disabled={readOnly || isLoading} />
+                    <Input
+                      placeholder='John Doe'
+                      className='col-span-4'
+                      autoComplete='off'
+                      {...field}
+                      disabled={readOnly || isLoading}
+                    />
                   </FormControl>
                   <FormMessage className='col-span-4 col-start-3' />
                 </FormItem>
@@ -159,7 +194,12 @@ export function UsersActionDialog({
                 <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                   <FormLabel className='col-span-2 text-end'>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder='john@example.com' className='col-span-4' {...field} disabled={readOnly || isLoading} />
+                    <Input
+                      placeholder='john@example.com'
+                      className='col-span-4'
+                      {...field}
+                      disabled={readOnly || isLoading}
+                    />
                   </FormControl>
                   <FormMessage className='col-span-4 col-start-3' />
                 </FormItem>
@@ -174,7 +214,9 @@ export function UsersActionDialog({
                   <FormControl>
                     <Switch
                       checked={field.value === 'active'}
-                      onCheckedChange={(checked) => field.onChange(checked ? 'active' : 'inactive')}
+                      onCheckedChange={(checked) =>
+                        field.onChange(checked ? 'active' : 'inactive')
+                      }
                       disabled={readOnly || isLoading}
                     />
                   </FormControl>
@@ -192,7 +234,11 @@ export function UsersActionDialog({
                   </FormLabel>
                   <FormControl>
                     <PasswordInput
-                      placeholder={isEdit ? 'Deixe em branco para manter a atual' : '********'}
+                      placeholder={
+                        isEdit
+                          ? 'Deixe em branco para manter a atual'
+                          : '********'
+                      }
                       className='col-span-4'
                       {...field}
                       disabled={readOnly || isLoading}
@@ -207,10 +253,16 @@ export function UsersActionDialog({
               name='confirmPassword'
               render={({ field }) => (
                 <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                  <FormLabel className='col-span-2 text-end'>Confirmar Senha</FormLabel>
+                  <FormLabel className='col-span-2 text-end'>
+                    Confirmar Senha
+                  </FormLabel>
                   <FormControl>
                     <PasswordInput
-                      placeholder={isEdit ? 'Deixe em branco para manter a atual' : '********'}
+                      placeholder={
+                        isEdit
+                          ? 'Deixe em branco para manter a atual'
+                          : '********'
+                      }
                       className='col-span-4'
                       {...field}
                       disabled={readOnly || isLoading || !isPasswordTouched}
@@ -229,10 +281,13 @@ export function UsersActionDialog({
               Salvar alterações
             </Button>
           ) : (
-            <Button type='button' onClick={(e) => {
-              e.preventDefault()
-              onOpenChange(false)
-            }}>
+            <Button
+              type='button'
+              onClick={(e) => {
+                e.preventDefault()
+                onOpenChange(false)
+              }}
+            >
               Fechar
             </Button>
           )}

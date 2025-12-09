@@ -13,7 +13,9 @@ export function Analytics() {
       <Card>
         <CardHeader>
           <CardTitle>Visão Geral de Tráfego</CardTitle>
-          <CardDescription>Cliques semanais e visitantes únicos</CardDescription>
+          <CardDescription>
+            Cliques semanais e visitantes únicos
+          </CardDescription>
         </CardHeader>
         <CardContent className='px-6'>
           <AnalyticsChart />
@@ -22,7 +24,9 @@ export function Analytics() {
       <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Total de Cliques</CardTitle>
+            <CardTitle className='text-sm font-medium'>
+              Total de Cliques
+            </CardTitle>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 24 24'
@@ -39,7 +43,9 @@ export function Analytics() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>1,248</div>
-            <p className='text-muted-foreground text-xs'>+12.4% vs semana passada</p>
+            <p className='text-muted-foreground text-xs'>
+              +12.4% vs semana passada
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -63,12 +69,16 @@ export function Analytics() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>832</div>
-            <p className='text-muted-foreground text-xs'>+5.8% vs semana passada</p>
+            <p className='text-muted-foreground text-xs'>
+              +5.8% vs semana passada
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Taxa de Rejeição</CardTitle>
+            <CardTitle className='text-sm font-medium'>
+              Taxa de Rejeição
+            </CardTitle>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 24 24'
@@ -84,7 +94,9 @@ export function Analytics() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>42%</div>
-            <p className='text-muted-foreground text-xs'>-3.2% vs semana passada</p>
+            <p className='text-muted-foreground text-xs'>
+              -3.2% vs semana passada
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -106,7 +118,9 @@ export function Analytics() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>3m 24s</div>
-            <p className='text-muted-foreground text-xs'>+18s vs semana passada</p>
+            <p className='text-muted-foreground text-xs'>
+              +18s vs semana passada
+            </p>
           </CardContent>
         </Card>
       </div>

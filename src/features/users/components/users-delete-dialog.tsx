@@ -54,7 +54,10 @@ export function UsersDeleteDialog({
           {isLoading ? (
             <Loader2 className='me-1 inline-block animate-spin' size={18} />
           ) : (
-            <AlertTriangle className='stroke-destructive me-1 inline-block' size={18} />
+            <AlertTriangle
+              className='stroke-destructive me-1 inline-block'
+              size={18}
+            />
           )}
           Excluir Usuário
         </span>
@@ -65,7 +68,8 @@ export function UsersDeleteDialog({
             Tem certeza que deseja excluir{' '}
             <span className='font-bold'>{currentRow.name}</span>?
             <br />
-            Esta ação removerá permanentemente o usuário do sistema. Isso não pode ser desfeito.
+            Esta ação removerá permanentemente o usuário do sistema. Isso não
+            pode ser desfeito.
           </p>
 
           <Label className='my-2'>

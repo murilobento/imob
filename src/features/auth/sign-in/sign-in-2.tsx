@@ -23,7 +23,6 @@ export function SignIn2() {
             </p>
           </div>
           <UserAuthForm />
-
         </div>
       </div>
 

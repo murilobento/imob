@@ -10,14 +10,16 @@ export function UnauthorisedError() {
         <h1 className='text-[7rem] leading-tight font-bold'>401</h1>
         <span className='font-medium'>Acesso Não Autorizado</span>
         <p className='text-muted-foreground text-center'>
-          Por favor, faça login com as credenciais apropriadas <br /> para acessar este
-          recurso.
+          Por favor, faça login com as credenciais apropriadas <br /> para
+          acessar este recurso.
         </p>
         <div className='mt-6 flex gap-4'>
           <Button variant='outline' onClick={() => history.go(-1)}>
             Voltar
           </Button>
-          <Button onClick={() => navigate({ to: '/' })}>Ir para o Início</Button>
+          <Button onClick={() => navigate({ to: '/' })}>
+            Ir para o Início
+          </Button>
         </div>
       </div>
     </div>

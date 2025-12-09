@@ -1,5 +1,5 @@
-import { type ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
+import { type ColumnDef } from '@tanstack/react-table'
 import { ptBR } from 'date-fns/locale'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
@@ -75,8 +75,8 @@ export const usersColumns: ColumnDef<User>[] = [
           className={cn(
             'capitalize',
             status === 'active'
-              ? 'bg-teal-100/30 text-teal-900 dark:text-teal-200 border-teal-200'
-              : 'bg-neutral-300/40 border-neutral-300 text-neutral-600'
+              ? 'border-teal-200 bg-teal-100/30 text-teal-900 dark:text-teal-200'
+              : 'border-neutral-300 bg-neutral-300/40 text-neutral-600'
           )}
         >
           {status === 'active' ? 'Ativo' : 'Inativo'}
@@ -95,7 +95,11 @@ export const usersColumns: ColumnDef<User>[] = [
     ),
     cell: ({ row }) => {
       const date = row.getValue('createdAt') as Date
-      return <div className='text-nowrap'>{format(date, 'PPP', { locale: ptBR })}</div>
+      return (
+        <div className='text-nowrap'>
+          {format(date, 'PPP', { locale: ptBR })}
+        </div>
+      )
     },
   },
   {

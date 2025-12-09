@@ -19,8 +19,8 @@ export function Otp() {
             Autenticação de Dois Fatores
           </CardTitle>
           <CardDescription>
-            Por favor, insira o código de autenticação. <br /> Enviamos o
-            código de autenticação para seu email.
+            Por favor, insira o código de autenticação. <br /> Enviamos o código
+            de autenticação para seu email.
           </CardDescription>
         </CardHeader>
         <CardContent>

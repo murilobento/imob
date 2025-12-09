@@ -41,7 +41,9 @@ export function UsersMultiDeleteDialog<TData>({
     try {
       const ids = selectedRows.map((row) => (row.original as User).id)
       await deleteUsers(ids)
-      toast.success(`Excluído(s) ${selectedRows.length} ${selectedRows.length > 1 ? 'usuários' : 'usuário'}`)
+      toast.success(
+        `Excluído(s) ${selectedRows.length} ${selectedRows.length > 1 ? 'usuários' : 'usuário'}`
+      )
       table.resetRowSelection()
       setValue('')
       onOpenChange(false)
@@ -64,9 +66,13 @@ export function UsersMultiDeleteDialog<TData>({
           {isLoading ? (
             <Loader2 className='me-1 inline-block animate-spin' size={18} />
           ) : (
-            <AlertTriangle className='stroke-destructive me-1 inline-block' size={18} />
+            <AlertTriangle
+              className='stroke-destructive me-1 inline-block'
+              size={18}
+            />
           )}
-          Excluir {selectedRows.length} {selectedRows.length > 1 ? 'usuários' : 'usuário'}
+          Excluir {selectedRows.length}{' '}
+          {selectedRows.length > 1 ? 'usuários' : 'usuário'}
         </span>
       }
       desc={

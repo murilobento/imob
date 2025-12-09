@@ -40,7 +40,7 @@ export function DataTableBulkActions<TData>({
   // Announce selection changes to screen readers
   useEffect(() => {
     if (selectedCount > 0) {
-      const message = `${selectedCount} ${entityName}${selectedCount > 1 ? 's' : ''} selected. Bulk actions toolbar is available.`
+      const message = `${selectedCount} ${entityName}${selectedCount > 1 ? 's' : ''} selecionado(s). Barra de ações em massa disponível.`
 
       // Use queueMicrotask to defer state update and avoid cascading renders
       queueMicrotask(() => {
@@ -138,7 +138,7 @@ export function DataTableBulkActions<TData>({
       <div
         ref={toolbarRef}
         role='toolbar'
-        aria-label={`Bulk actions for ${selectedCount} selected ${entityName}${selectedCount > 1 ? 's' : ''}`}
+        aria-label={`Ações em massa para ${selectedCount} ${entityName}${selectedCount > 1 ? 's' : ''} selecionado(s)`}
         aria-describedby='bulk-actions-description'
         tabIndex={-1}
         onKeyDown={handleKeyDown}
@@ -163,15 +163,15 @@ export function DataTableBulkActions<TData>({
                 size='icon'
                 onClick={handleClearSelection}
                 className='size-6 rounded-full'
-                aria-label='Clear selection'
-                title='Clear selection (Escape)'
+                aria-label='Limpar seleção'
+                title='Limpar seleção (Esc)'
               >
                 <X />
-                <span className='sr-only'>Clear selection</span>
+                <span className='sr-only'>Limpar seleção</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Clear selection (Escape)</p>
+              <p>Limpar seleção (Esc)</p>
             </TooltipContent>
           </Tooltip>
 
@@ -196,7 +196,7 @@ export function DataTableBulkActions<TData>({
               {entityName}
               {selectedCount > 1 ? 's' : ''}
             </span>{' '}
-            selected
+            selecionado{selectedCount > 1 ? 's' : ''}
           </div>
 
           <Separator

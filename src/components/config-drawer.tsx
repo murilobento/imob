@@ -152,7 +152,7 @@ function RadioGroupItem({
         <item.icon
           className={cn(
             !isTheme &&
-            'stroke-primary fill-primary group-data-[state=unchecked]:stroke-muted-foreground group-data-[state=unchecked]:fill-muted-foreground'
+              'stroke-primary fill-primary group-data-[state=unchecked]:stroke-muted-foreground group-data-[state=unchecked]:fill-muted-foreground'
           )}
           aria-hidden='true'
         />
@@ -305,7 +305,8 @@ function LayoutConfig() {
         ))}
       </Radio>
       <div id='layout-description' className='sr-only'>
-        Escolha entre modo expandido padrão, apenas ícones compacto ou tela cheia
+        Escolha entre modo expandido padrão, apenas ícones compacto ou tela
+        cheia
       </div>
     </div>
   )
@@ -347,7 +348,8 @@ function DirConfig() {
         ))}
       </Radio>
       <div id='direction-description' className='sr-only'>
-        Escolha entre direção do site da esquerda para direita ou direita para esquerda
+        Escolha entre direção do site da esquerda para direita ou direita para
+        esquerda
       </div>
     </div>
   )
