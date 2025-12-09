@@ -88,7 +88,11 @@ export function UsersActionDialog({
     setIsLoading(true)
     try {
       if (isEdit && currentRow) {
-        await updateUser(currentRow.id, { name: values.name, email: values.email })
+        await updateUser(currentRow.id, {
+          name: values.name,
+          email: values.email,
+          ...(values.password ? { password: values.password } : {}),
+        })
         toast.success('User updated successfully')
       } else {
         await createUser({ name: values.name, email: values.email, password: values.password })
@@ -154,41 +158,43 @@ export function UsersActionDialog({
                 </FormItem>
               )}
             />
-            {!isEdit && (
-              <>
-                <FormField
-                  control={form.control}
-                  name='password'
-                  render={({ field }) => (
-                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                      <FormLabel className='col-span-2 text-end'>Password</FormLabel>
-                      <FormControl>
-                        <PasswordInput placeholder='********' className='col-span-4' {...field} />
-                      </FormControl>
-                      <FormMessage className='col-span-4 col-start-3' />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='confirmPassword'
-                  render={({ field }) => (
-                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                      <FormLabel className='col-span-2 text-end'>Confirm Password</FormLabel>
-                      <FormControl>
-                        <PasswordInput
-                          disabled={!isPasswordTouched}
-                          placeholder='********'
-                          className='col-span-4'
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className='col-span-4 col-start-3' />
-                    </FormItem>
-                  )}
-                />
-              </>
-            )}
+            <FormField
+              control={form.control}
+              name='password'
+              render={({ field }) => (
+                <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                  <FormLabel className='col-span-2 text-end'>
+                    {isEdit ? 'New Password' : 'Password'}
+                  </FormLabel>
+                  <FormControl>
+                    <PasswordInput
+                      placeholder={isEdit ? 'Leave blank to keep current' : '********'}
+                      className='col-span-4'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className='col-span-4 col-start-3' />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='confirmPassword'
+              render={({ field }) => (
+                <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                  <FormLabel className='col-span-2 text-end'>Confirm Password</FormLabel>
+                  <FormControl>
+                    <PasswordInput
+                      disabled={!isPasswordTouched}
+                      placeholder={isEdit ? 'Leave blank to keep current' : '********'}
+                      className='col-span-4'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className='col-span-4 col-start-3' />
+                </FormItem>
+              )}
+            />
           </form>
         </Form>
         <DialogFooter>

@@ -39,11 +39,24 @@ app.delete('/api/users/:id', async (c) => {
 app.patch('/api/users/:id', async (c) => {
   const id = c.req.param('id')
   const body = await c.req.json()
-  const { name, email } = body
+  const { name, email, password } = body
+
+  // Update user basic info
   const result = await pool.query(
     'UPDATE "user" SET name = $1, email = $2, "updatedAt" = NOW() WHERE id = $3 RETURNING *',
     [name, email, id]
   )
+
+  // Update password if provided using better-auth's internal context
+  if (password) {
+    const ctx = await auth.$context
+    const hashedPassword = await ctx.password.hash(password)
+    await pool.query(
+      'UPDATE "account" SET password = $1 WHERE "userId" = $2 AND "providerId" = $3',
+      [hashedPassword, id, 'credential']
+    )
+  }
+
   return c.json(result.rows[0])
 })
 
