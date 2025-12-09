@@ -101,7 +101,7 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
         filters={[
           {
             columnId: 'status',
-            title: 'Situação',
+            title: 'Status',
             options: userStatuses.map((s) => ({ ...s })),
           },
         ]}
