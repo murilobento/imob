@@ -1,119 +1,108 @@
 # Shadcn Admin Dashboard
 
-Admin Dashboard UI crafted with Shadcn and Vite. Built with responsiveness and accessibility in mind.
+Dashboard administrativo moderno construído com React, Shadcn/UI, Vite e TypeScript. O backend é gerenciado via Hono e Better Auth.
 
-![alt text](public/images/shadcn-admin.png)
+## 🚀 Pré-requisitos
 
-[![Sponsored by Clerk](https://img.shields.io/badge/Sponsored%20by-Clerk-5b6ee1?logo=clerk)](https://go.clerk.com/GttUAaK)
+Antes de começar, certifique-se de ter instalado em sua máquina:
 
-I've been creating dashboard UIs at work and for my personal projects. I always wanted to make a reusable collection of dashboard UI for future projects; and here it is now. While I've created a few custom components, some of the code is directly adapted from ShadcnUI examples.
+- [Node.js](https://nodejs.org/) (Versão 20 ou superior recomendada)
+- [pnpm](https://pnpm.io/installation) (Gerenciador de pacotes)
+- [PostgreSQL](https://www.postgresql.org/) (Banco de dados)
 
-> This is not a starter project (template) though. I'll probably make one in the future.
+## 🛠️ Instalação
 
-## Features
+1.  **Clone o repositório:**
 
-- Light/dark mode
-- Responsive
-- Accessible
-- With built-in Sidebar component
-- Global search command
-- 10+ pages
-- Extra custom components
-- RTL support
+    ```bash
+    git clone https://github.com/murilobento/dashboard-modelo.git
+    cd dashboard-modelo
+    ```
 
-<details>
-<summary>Customized Components (click to expand)</summary>
+2.  **Instale as dependências:**
+    Este projeto utiliza workspaces, então o comando abaixo instalará dependências tanto para o frontend quanto para o backend.
 
-This project uses Shadcn UI components, but some have been slightly modified for better RTL (Right-to-Left) support and other improvements. These customized components differ from the original Shadcn UI versions.
+    ```bash
+    pnpm install
+    ```
 
-If you want to update components using the Shadcn CLI (e.g., `npx shadcn@latest add <component>`), it's generally safe for non-customized components. For the listed customized ones, you may need to manually merge changes to preserve the project's modifications and avoid overwriting RTL support or other updates.
+## ⚙️ Configuração do Ambiente
 
-> If you don't require RTL support, you can safely update the 'RTL Updated Components' via the Shadcn CLI, as these changes are primarily for RTL compatibility. The 'Modified Components' may have other customizations to consider.
+Você precisará configurar as variáveis de ambiente para o frontend e para o servidor.
 
-### Modified Components
-
-- scroll-area
-- sonner
-- separator
-
-### RTL Updated Components
-
-- alert-dialog
-- calendar
-- command
-- dialog
-- dropdown-menu
-- select
-- table
-- sheet
-- sidebar
-- switch
-
-**Notes:**
-
-- **Modified Components**: These have general updates, potentially including RTL adjustments.
-- **RTL Updated Components**: These have specific changes for RTL language support (e.g., layout, positioning).
-- For implementation details, check the source files in `src/components/ui/`.
-- All other Shadcn UI components in the project are standard and can be safely updated via the CLI.
-
-</details>
-
-## Tech Stack
-
-**UI:** [ShadcnUI](https://ui.shadcn.com) (TailwindCSS + RadixUI)
-
-**Build Tool:** [Vite](https://vitejs.dev/)
-
-**Routing:** [TanStack Router](https://tanstack.com/router/latest)
-
-**Type Checking:** [TypeScript](https://www.typescriptlang.org/)
-
-**Linting/Formatting:** [ESLint](https://eslint.org/) & [Prettier](https://prettier.io/)
-
-**Icons:** [Lucide Icons](https://lucide.dev/icons/), [Tabler Icons](https://tabler.io/icons) (Brand icons only)
-
-**Auth (partial):** [Clerk](https://go.clerk.com/GttUAaK)
-
-## Run Locally
-
-Clone the project
+### 1. Frontend (.env)
+Na raiz do projeto, crie um arquivo `.env` baseando-se no exemplo:
 
 ```bash
-  git clone https://github.com/satnaing/shadcn-admin.git
+cp .env.example .env
+```
+Certifique-se de que o `VITE_API_URL` está apontando para o seu backend (padrão é localhost:3000):
+```env
+VITE_API_URL=http://localhost:3000
 ```
 
-Go to the project directory
+### 2. Backend (server/.env)
+Crie um arquivo `.env` dentro da pasta `server/`:
 
 ```bash
-  cd shadcn-admin
+cd server
+touch .env
 ```
 
-Install dependencies
+Adicione as seguintes variáveis ao arquivo `server/.env`:
+
+```env
+# URL de conexão com o PostgreSQL
+DATABASE_URL=postgresql://usuario:senha@localhost:5432/nome_do_banco
+
+# Segredo para autenticação - Gere uma string segura
+BETTER_AUTH_SECRET=sua_chave_secreta_super_segura
+
+# URL base do servidor de autenticação
+BETTER_AUTH_URL=http://localhost:3000
+```
+
+*Dica: Você pode gerar uma chave secreta rodando `openssl rand -base64 32` no terminal.*
+
+## 🗄️ Configuração do Banco de Dados
+
+Após configurar o `DATABASE_URL` no `server/.env`, execute as migrações para criar as tabelas necessárias:
 
 ```bash
-  pnpm install
+# Executar a partir da raiz do projeto
+pnpm db:migrate
 ```
 
-Start the server
+Para popular o banco com dados iniciais (se disponível):
+```bash
+pnpm --filter auth-server run db:seed
+```
+
+## ▶️ Executando o Projeto
+
+Para iniciar tanto o frontend quanto o backend simultaneamente em modo de desenvolvimento:
 
 ```bash
-  pnpm run dev
+pnpm dev:all
 ```
 
-## Sponsoring this project ❤️
+- **Frontend:** Acessível em `http://localhost:5173`
+- **Backend:** Rodando em `http://localhost:3000`
 
-If you find this project helpful or use this in your own work, consider [sponsoring me](https://github.com/sponsors/satnaing) to support development and maintenance. You can [buy me a coffee](https://buymeacoffee.com/satnaing) as well. Don’t worry, every penny helps. Thank you! 🙏
+### Outros Comandos Úteis
 
-For questions or sponsorship inquiries, feel free to reach out at [satnaingdev@gmail.com](mailto:satnaingdev@gmail.com).
+- **Apenas Frontend:** `pnpm dev`
+- **Apenas Backend:** `pnpm dev:server`
+- **Build de Produção:** `pnpm build`
+- **Linting:** `pnpm lint`
+- **Formatação:** `pnpm format`
 
-### Current Sponsor
+## 🏗️ Estrutura do Projeto
 
-- [Clerk](https://go.clerk.com/GttUAaK) - authentication and user management for the modern web
+- `/src` - Código fonte do Frontend (React, Shadcn, TanStack Router)
+- `/server` - Backend (Hono, Better Auth, Drizzle/TypeORM/Pg)
+- `/public` - Arquivos estáticos
 
-## Author
+## 📝 Licença
 
-Crafted with 🤍 by [@satnaing](https://github.com/satnaing)
-
-## License
-
-Licensed under the [MIT License](https://choosealicense.com/licenses/mit/)
+Este projeto está sob a licença [MIT](LICENSE).
