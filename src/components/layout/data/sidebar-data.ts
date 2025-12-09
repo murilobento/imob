@@ -1,7 +1,7 @@
 import {
   LayoutDashboard,
   Users,
-  Building2,
+
   Command,
   GalleryVerticalEnd,
 } from 'lucide-react'
@@ -48,11 +48,7 @@ export const sidebarData: SidebarData = {
           url: '/users',
           icon: Users,
         },
-        {
-          title: 'Configurações da Empresa',
-          url: '/?modal=company-settings',
-          icon: Building2,
-        },
+
       ],
     },
   ],

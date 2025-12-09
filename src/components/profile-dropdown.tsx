@@ -1,5 +1,4 @@
-import { Link } from '@tanstack/react-router'
-import { Bell, LogOut, UserCog, Wrench, Palette, Monitor } from 'lucide-react'
+import { LogOut } from 'lucide-react'
 import { useSession } from '@/lib/auth-client'
 import useDialogState from '@/hooks/use-dialog-state'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -7,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
+
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -49,39 +48,6 @@ export function ProfileDropdown() {
               </p>
             </div>
           </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem asChild>
-              <Link to='/settings'>
-                <UserCog />
-                Perfil
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to='/settings/account'>
-                <Wrench />
-                Conta
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to='/settings/appearance'>
-                <Palette />
-                Aparência
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to='/settings/notifications'>
-                <Bell />
-                Notificações
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to='/settings/display'>
-                <Monitor />
-                Exibição
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant='destructive' onClick={() => setOpen(true)}>
             <LogOut />
