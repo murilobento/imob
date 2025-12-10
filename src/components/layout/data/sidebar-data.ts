@@ -49,6 +49,11 @@ export const sidebarData: SidebarData = {
           icon: Users,
         },
         {
+          title: 'Clientes',
+          url: '/customers',
+          icon: Users, // Using Users icon for now, could be improved
+        },
+        {
           title: 'Configurações da Empresa',
           url: '/?modal=company-settings',
           icon: Building2,
@@ -57,3 +62,4 @@ export const sidebarData: SidebarData = {
     },
   ],
 }
+
