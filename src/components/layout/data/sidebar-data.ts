@@ -2,8 +2,7 @@ import {
   LayoutDashboard,
   Users,
   Building2,
-  Command,
-  GalleryVerticalEnd,
+  ShieldUser,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -13,45 +12,24 @@ export const sidebarData: SidebarData = {
     email: 'satnaingdev@gmail.com',
     avatar: '/avatars/shadcn.jpg',
   },
-  modules: [
-    {
-      name: 'Geral',
-      logo: GalleryVerticalEnd,
-      plan: 'Dashboard',
-      id: 'general',
-    },
-    {
-      name: 'Administrativo',
-      logo: Command,
-      plan: 'Ferramentas Admin',
-      id: 'admin',
-    },
-  ],
   navGroups: [
     {
-      title: 'Geral',
-      moduleId: 'general',
+      title: 'Menu Principal',
       items: [
         {
           title: 'Dashboard',
           url: '/',
           icon: LayoutDashboard,
         },
-      ],
-    },
-    {
-      title: 'Administrativo',
-      moduleId: 'admin',
-      items: [
         {
           title: 'Usuários',
           url: '/users',
-          icon: Users,
+          icon: ShieldUser,
         },
         {
           title: 'Clientes',
           url: '/customers',
-          icon: Users, // Using Users icon for now, could be improved
+          icon: Users,
         },
         {
           title: 'Configurações da Empresa',
@@ -62,4 +40,3 @@ export const sidebarData: SidebarData = {
     },
   ],
 }
-

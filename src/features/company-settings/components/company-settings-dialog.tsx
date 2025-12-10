@@ -71,6 +71,7 @@ const companySettingsSchema = z.object({
   facebook: z.string().optional(),
   tiktok: z.string().optional(),
   whatsapp: z.string().optional(),
+  logo: z.string().optional(),
 })
 
 type CompanySettingsFormValues = z.infer<typeof companySettingsSchema>
@@ -107,10 +108,33 @@ export function CompanySettingsDialog({
       facebook: '',
       tiktok: '',
       whatsapp: '',
+      logo: '',
     },
   })
 
+
   const uf = form.watch('uf')
+  const logo = form.watch('logo')
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('O arquivo deve ter no máximo 2MB')
+        return
+      }
+
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        form.setValue('logo', reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleRemoveLogo = () => {
+    form.setValue('logo', '')
+  }
 
   useEffect(() => {
     if (open) {
@@ -309,11 +333,61 @@ export function CompanySettingsDialog({
             className='space-y-4'
           >
             <Tabs defaultValue='address' className='w-full'>
-              <TabsList className='grid w-full grid-cols-3'>
+              <TabsList className='grid w-full grid-cols-4'>
                 <TabsTrigger value='address'>Endereço</TabsTrigger>
                 <TabsTrigger value='general'>Dados Gerais</TabsTrigger>
                 <TabsTrigger value='contact'>Contato</TabsTrigger>
+                <TabsTrigger value='branding'>Logo</TabsTrigger>
               </TabsList>
+              <TabsContent value='branding'>
+                <div className='flex flex-col items-center justify-center space-y-4 pt-4'>
+                  <div className='relative h-32 w-32'>
+                    {logo ? (
+                      <img
+                        src={logo}
+                        alt='Logo Preview'
+                        className='h-full w-full rounded-lg object-cover border'
+                      />
+                    ) : (
+                      <div className='flex h-full w-full items-center justify-center rounded-lg border border-dashed bg-muted'>
+                        <span className='text-muted-foreground text-sm font-medium'>
+                          Sem Logo
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className='flex flex-col items-center gap-2'>
+                    <div className='flex gap-2'>
+                      <Button
+                        type='button'
+                        variant='outline'
+                        onClick={() => document.getElementById('logo-upload')?.click()}
+                      >
+                        Carregar Imagem
+                      </Button>
+                      {logo && (
+                        <Button
+                          type='button'
+                          variant='destructive'
+                          onClick={handleRemoveLogo}
+                        >
+                          Remover
+                        </Button>
+                      )}
+                    </div>
+                    <Input
+                      id='logo-upload'
+                      type='file'
+                      accept='image/*'
+                      className='hidden'
+                      onChange={handleLogoUpload}
+                    />
+                    <p className='text-muted-foreground text-xs'>
+                      Recomendado: 512x512px, Max: 2MB
+                    </p>
+                  </div>
+                </div>
+              </TabsContent>
               <TabsContent value='address'>
                 <div className='grid grid-cols-1 gap-4 pt-4 md:grid-cols-12'>
                   <div className='col-span-1 md:col-span-2'>

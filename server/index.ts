@@ -139,6 +139,7 @@ const initCompanySettings = async () => {
   try {
     await pool.query('ALTER TABLE company_settings ADD COLUMN IF NOT EXISTS nome_fantasia TEXT')
     await pool.query('ALTER TABLE company_settings ADD COLUMN IF NOT EXISTS razao_social TEXT')
+    await pool.query('ALTER TABLE company_settings ADD COLUMN IF NOT EXISTS logo TEXT')
   } catch {
     // Silently fail company settings migration
   }
@@ -173,11 +174,12 @@ app.post('/api/company-settings', async (c) => {
     facebook,
     tiktok,
     whatsapp,
+    logo,
   } = body
 
   const result = await pool.query(
-    `INSERT INTO company_settings (id, nome_fantasia, razao_social, cnpj, inscricao_estadual, cep, logradouro, numero, complemento, bairro, cidade, uf, email, site, telefone, instagram, facebook, tiktok, whatsapp, updated_at)
-     VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, NOW())
+    `INSERT INTO company_settings (id, nome_fantasia, razao_social, cnpj, inscricao_estadual, cep, logradouro, numero, complemento, bairro, cidade, uf, email, site, telefone, instagram, facebook, tiktok, whatsapp, logo, updated_at)
+     VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, NOW())
      ON CONFLICT (id) DO UPDATE SET
        nome_fantasia = EXCLUDED.nome_fantasia,
        razao_social = EXCLUDED.razao_social,
@@ -197,6 +199,7 @@ app.post('/api/company-settings', async (c) => {
        facebook = EXCLUDED.facebook,
        tiktok = EXCLUDED.tiktok,
        whatsapp = EXCLUDED.whatsapp,
+       logo = EXCLUDED.logo,
        updated_at = NOW()
      RETURNING *`,
     [
@@ -218,6 +221,7 @@ app.post('/api/company-settings', async (c) => {
       facebook,
       tiktok,
       whatsapp,
+      logo,
     ]
   )
   return c.json(result.rows[0])

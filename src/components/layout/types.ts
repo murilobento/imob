@@ -41,6 +41,6 @@ type NavGroup = {
 
 type SidebarData = {
   user: User
-  modules: Module[]
+  modules?: Module[]
   navGroups: NavGroup[]
 }
