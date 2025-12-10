@@ -364,6 +364,160 @@ app.delete('/api/customers/:id', async (c) => {
 
 app.get('/api/health', (c) => c.json({ status: 'ok' }))
 
+// Real Estate API
+const initRealEstateSchema = async () => {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS real_estate (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      code TEXT,
+      title TEXT NOT NULL,
+      type TEXT NOT NULL, -- 'HOUSE' | 'APARTMENT' | 'LAND' | 'COMMERCIAL'
+      street TEXT,
+      number TEXT,
+      complement TEXT,
+      neighborhood TEXT,
+      city TEXT,
+      state TEXT,
+      zip TEXT,
+      
+      finality TEXT, -- 'SALE' | 'RENT' | 'BOTH'
+      situation TEXT, -- 'AVAILABLE' | 'OCCUPIED' | 'UNAVAILABLE'
+      
+      built_area NUMERIC,
+      total_area NUMERIC,
+      bedrooms INTEGER,
+      suites INTEGER,
+      bathrooms INTEGER,
+      garage_spots INTEGER,
+      is_furnished BOOLEAN DEFAULT FALSE,
+      
+      rental_value NUMERIC,
+      sale_value NUMERIC,
+      condominium_value NUMERIC,
+      iptu_value NUMERIC,
+      
+      owner_id UUID REFERENCES customers(id),
+      registry_id TEXT,
+      registration_id TEXT,
+      legal_notes TEXT,
+      
+      photos TEXT, -- JSON string
+      videos TEXT, -- JSON string
+      blueprints TEXT, -- JSON string
+      
+      is_available BOOLEAN DEFAULT TRUE,
+      created_at TIMESTAMP DEFAULT NOW(),
+      updated_at TIMESTAMP DEFAULT NOW()
+    );
+  `)
+  try {
+    // potential future migrations here
+  } catch {
+    // Silently fail real estate schema migration
+  }
+}
+initRealEstateSchema().catch(() => {
+  // Silently fail real estate schema initialization
+})
+
+app.get('/api/real-estate', async (c) => {
+  const result = await pool.query(`
+    SELECT r.*, c.name as owner_name 
+    FROM real_estate r 
+    LEFT JOIN customers c ON r.owner_id = c.id 
+    ORDER BY r.created_at DESC
+  `)
+  return c.json(result.rows)
+})
+
+app.post('/api/real-estate', async (c) => {
+  const body = await c.req.json()
+  const {
+    code, title, type,
+    street, number, complement, neighborhood, city, state, zip,
+    finality, situation,
+    built_area, total_area, bedrooms, suites, bathrooms, garage_spots, is_furnished,
+    rental_value, sale_value, condominium_value, iptu_value,
+    owner_id, registry_id, registration_id, legal_notes,
+    photos, videos, blueprints,
+    is_available
+  } = body
+
+  const result = await pool.query(
+    `INSERT INTO real_estate (
+      code, title, type,
+      street, number, complement, neighborhood, city, state, zip,
+      finality, situation,
+      built_area, total_area, bedrooms, suites, bathrooms, garage_spots, is_furnished,
+      rental_value, sale_value, condominium_value, iptu_value,
+      owner_id, registry_id, registration_id, legal_notes,
+      photos, videos, blueprints,
+      is_available
+    ) VALUES (
+      $1, $2, $3,
+      $4, $5, $6, $7, $8, $9, $10,
+      $11, $12,
+      $13, $14, $15, $16, $17, $18, $19,
+      $20, $21, $22, $23,
+      $24, $25, $26, $27,
+      $28, $29, $30,
+      $31
+    ) RETURNING *`,
+    [
+      code ?? null, title, type,
+      street ?? null, number ?? null, complement ?? null, neighborhood ?? null, city ?? null, state ?? null, zip ?? null,
+      finality ?? null, situation ?? null,
+      built_area ?? null, total_area ?? null, bedrooms ?? null, suites ?? null, bathrooms ?? null, garage_spots ?? null, is_furnished ?? false,
+      rental_value ?? null, sale_value ?? null, condominium_value ?? null, iptu_value ?? null,
+      owner_id ?? null, registry_id ?? null, registration_id ?? null, legal_notes ?? null,
+      photos ?? null, videos ?? null, blueprints ?? null,
+      is_available ?? true
+    ]
+  )
+  return c.json(result.rows[0])
+})
+
+app.patch('/api/real-estate/:id', async (c) => {
+  const id = c.req.param('id')
+  const body = await c.req.json()
+  const fields = [
+    'code', 'title', 'type',
+    'street', 'number', 'complement', 'neighborhood', 'city', 'state', 'zip',
+    'finality', 'situation',
+    'built_area', 'total_area', 'bedrooms', 'suites', 'bathrooms', 'garage_spots', 'is_furnished',
+    'rental_value', 'sale_value', 'condominium_value', 'iptu_value',
+    'owner_id', 'registry_id', 'registration_id', 'legal_notes',
+    'photos', 'videos', 'blueprints',
+    'is_available'
+  ]
+
+  const updates: string[] = []
+  const values: any[] = []
+  let paramIndex = 1
+
+  fields.forEach(field => {
+    if (body[field] !== undefined) {
+      updates.push(`${field} = $${paramIndex}`)
+      values.push(body[field])
+      paramIndex++
+    }
+  })
+
+  if (updates.length === 0) return c.json({ error: 'No fields to update' }, 400)
+
+  values.push(id)
+  const query = `UPDATE real_estate SET ${updates.join(', ')}, updated_at = NOW() WHERE id = $${paramIndex} RETURNING *`
+
+  const result = await pool.query(query, values)
+  return c.json(result.rows[0])
+})
+
+app.delete('/api/real-estate/:id', async (c) => {
+  const id = c.req.param('id')
+  await pool.query('DELETE FROM real_estate WHERE id = $1', [id])
+  return c.json({ success: true })
+})
+
 const port = 3000
 // eslint-disable-next-line no-console
 console.log(`Server running on http://localhost:${port}`)
