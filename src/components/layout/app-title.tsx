@@ -18,7 +18,9 @@ export function AppTitle() {
     fetch('http://localhost:3000/api/company-settings')
       .then((res) => res.json())
       .then((data) => setCompany(data))
-      .catch(console.error)
+      .catch(() => {
+        // Silently fail - use default company name
+      })
   }, [])
 
   // Extract initials from company name
@@ -41,7 +43,7 @@ export function AppTitle() {
       <SidebarMenuItem>
         <SidebarMenuButton
           size='lg'
-          className='gap-0 py-0 hover:bg-transparent active:bg-transparent group-data-[collapsible=icon]:!p-0'
+          className='gap-0 py-0 group-data-[collapsible=icon]:!p-0 hover:bg-transparent active:bg-transparent'
           asChild
         >
           <Link
@@ -50,7 +52,9 @@ export function AppTitle() {
             className='grid flex-1 place-items-center text-center text-sm leading-tight'
           >
             {isCollapsed ? (
-              <span className='text-xl font-bold tracking-tight'>{initials}</span>
+              <span className='text-xl font-bold tracking-tight'>
+                {initials}
+              </span>
             ) : (
               <>
                 <span className='truncate font-bold'>{companyName}</span>

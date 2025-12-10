@@ -31,8 +31,8 @@ app.use('/api/auth/sign-in/email', async (c, next) => {
           return c.json({ message: "Your account is inactive. Please contact the administrator." }, 403)
         }
       }
-    } catch (e) {
-      console.error('Login interception error:', e)
+    } catch {
+      // Silently fail login interception check
     }
   }
   await next()
@@ -44,11 +44,13 @@ app.on(['POST', 'GET'], '/api/auth/*', (c) => auth.handler(c.req.raw))
 const initUserSchema = async () => {
   try {
     await pool.query('ALTER TABLE "user" ADD COLUMN IF NOT EXISTS status TEXT DEFAULT \'active\'')
-  } catch (e) {
-    console.error('User migration error:', e)
+  } catch {
+    // Silently fail user migration
   }
 }
-initUserSchema().catch(console.error)
+initUserSchema().catch(() => {
+  // Silently fail schema initialization
+})
 
 app.get('/api/users', async (c) => {
   const result = await pool.query(
@@ -92,7 +94,7 @@ app.post('/api/users', async (c) => {
   const body = await c.req.json()
   const { name, email, password, status } = body
   const ctx = await auth.api.signUpEmail({
-    body: { name, email, password, status } as any,
+    body: { name, email, password, status } as { name: string; email: string; password: string; status?: string },
   })
   return c.json(ctx.user)
 })
@@ -129,11 +131,13 @@ const initCompanySettings = async () => {
   try {
     await pool.query('ALTER TABLE company_settings ADD COLUMN IF NOT EXISTS nome_fantasia TEXT')
     await pool.query('ALTER TABLE company_settings ADD COLUMN IF NOT EXISTS razao_social TEXT')
-  } catch (e) {
-    console.error('Migration error:', e)
+  } catch {
+    // Silently fail company settings migration
   }
 }
-initCompanySettings().catch(console.error)
+initCompanySettings().catch(() => {
+  // Silently fail company settings initialization
+})
 
 app.get('/api/company-settings', async (c) => {
   const result = await pool.query('SELECT * FROM company_settings WHERE id = 1')
@@ -214,6 +218,7 @@ app.post('/api/company-settings', async (c) => {
 app.get('/api/health', (c) => c.json({ status: 'ok' }))
 
 const port = 3000
+// eslint-disable-next-line no-console
 console.log(`Server running on http://localhost:${port}`)
 
 serve({

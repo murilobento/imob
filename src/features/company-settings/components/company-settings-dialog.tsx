@@ -122,7 +122,9 @@ export function CompanySettingsDialog({
             form.reset(data)
           }
         })
-        .catch((err) => console.error('Failed to fetch settings', err))
+        .catch(() => {
+          // Silently fail - form will use default values
+        })
     }
   }, [open, form])
 
@@ -136,11 +138,13 @@ export function CompanySettingsDialog({
       })
       if (res.ok) {
         toast.success('Configurações atualizadas com sucesso')
-        onOpenChange(false)
+        // Clear URL params and reload to update logo
+        window.history.replaceState({}, '', window.location.pathname)
+        window.location.reload()
       } else {
         toast.error('Falha ao atualizar configurações')
       }
-    } catch (error) {
+    } catch {
       toast.error('Erro ao enviar formulário')
     } finally {
       setIsLoading(false)
@@ -160,8 +164,8 @@ export function CompanySettingsDialog({
           form.setValue('uf', data.uf)
           form.setFocus('numero')
         }
-      } catch (error) {
-        console.error('Failed to fetch CEP', error)
+      } catch {
+        // Silently fail CEP lookup
       }
     }
   }
@@ -322,7 +326,7 @@ export function CompanySettingsDialog({
                                 if (e.target.value.length === 9) {
                                   handleCepBlur({
                                     target: { value: e.target.value },
-                                  } as any)
+                                  } as React.FocusEvent<HTMLInputElement>)
                                 }
                               }}
                             />

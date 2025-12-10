@@ -16,7 +16,9 @@ export function AuthLayout({ children }: AuthLayoutProps) {
           setCompanyName(data.nome_fantasia)
         }
       })
-      .catch((err) => console.error('Failed to fetch company settings', err))
+      .catch(() => {
+        // Silently fail - use default company name
+      })
   }, [])
 
   return (

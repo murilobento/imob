@@ -2,6 +2,7 @@ import 'dotenv/config'
 import { auth } from './auth'
 
 async function seed() {
+  // eslint-disable-next-line no-console
   console.log('Creating default user...')
 
   try {
@@ -13,8 +14,10 @@ async function seed() {
       },
     })
 
+    // eslint-disable-next-line no-console
     console.log('User created:', ctx.user.email)
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error creating user:', error)
   }
 
