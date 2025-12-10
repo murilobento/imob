@@ -118,6 +118,7 @@ const initCompanySettings = async () => {
       razao_social TEXT,
       cnpj TEXT,
       inscricao_estadual TEXT,
+      creci TEXT,
       cep TEXT,
       logradouro TEXT,
       numero TEXT,
@@ -126,7 +127,6 @@ const initCompanySettings = async () => {
       cidade TEXT,
       uf TEXT,
       email TEXT,
-      site TEXT,
       telefone TEXT,
       instagram TEXT,
       facebook TEXT,
@@ -140,6 +140,8 @@ const initCompanySettings = async () => {
     await pool.query('ALTER TABLE company_settings ADD COLUMN IF NOT EXISTS nome_fantasia TEXT')
     await pool.query('ALTER TABLE company_settings ADD COLUMN IF NOT EXISTS razao_social TEXT')
     await pool.query('ALTER TABLE company_settings ADD COLUMN IF NOT EXISTS logo TEXT')
+    await pool.query('ALTER TABLE company_settings ADD COLUMN IF NOT EXISTS creci TEXT')
+    await pool.query('ALTER TABLE company_settings DROP COLUMN IF EXISTS site')
   } catch {
     // Silently fail company settings migration
   }
@@ -160,6 +162,7 @@ app.post('/api/company-settings', async (c) => {
     razao_social,
     cnpj,
     inscricao_estadual,
+    creci,
     cep,
     logradouro,
     numero,
@@ -168,7 +171,6 @@ app.post('/api/company-settings', async (c) => {
     cidade,
     uf,
     email,
-    site,
     telefone,
     instagram,
     facebook,
@@ -178,13 +180,14 @@ app.post('/api/company-settings', async (c) => {
   } = body
 
   const result = await pool.query(
-    `INSERT INTO company_settings (id, nome_fantasia, razao_social, cnpj, inscricao_estadual, cep, logradouro, numero, complemento, bairro, cidade, uf, email, site, telefone, instagram, facebook, tiktok, whatsapp, logo, updated_at)
+    `INSERT INTO company_settings (id, nome_fantasia, razao_social, cnpj, inscricao_estadual, creci, cep, logradouro, numero, complemento, bairro, cidade, uf, email, telefone, instagram, facebook, tiktok, whatsapp, logo, updated_at)
      VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, NOW())
      ON CONFLICT (id) DO UPDATE SET
        nome_fantasia = EXCLUDED.nome_fantasia,
        razao_social = EXCLUDED.razao_social,
        cnpj = EXCLUDED.cnpj,
        inscricao_estadual = EXCLUDED.inscricao_estadual,
+       creci = EXCLUDED.creci,
        cep = EXCLUDED.cep,
        logradouro = EXCLUDED.logradouro,
        numero = EXCLUDED.numero,
@@ -193,7 +196,6 @@ app.post('/api/company-settings', async (c) => {
        cidade = EXCLUDED.cidade,
        uf = EXCLUDED.uf,
        email = EXCLUDED.email,
-       site = EXCLUDED.site,
        telefone = EXCLUDED.telefone,
        instagram = EXCLUDED.instagram,
        facebook = EXCLUDED.facebook,
@@ -207,6 +209,7 @@ app.post('/api/company-settings', async (c) => {
       razao_social,
       cnpj,
       inscricao_estadual,
+      creci,
       cep,
       logradouro,
       numero,
@@ -215,7 +218,6 @@ app.post('/api/company-settings', async (c) => {
       cidade,
       uf,
       email,
-      site,
       telefone,
       instagram,
       facebook,

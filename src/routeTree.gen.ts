@@ -22,6 +22,7 @@ import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-p
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedRealEstateIndexRouteImport } from './routes/_authenticated/real-estate/index'
 import { Route as AuthenticatedCustomersIndexRouteImport } from './routes/_authenticated/customers/index'
+import { Route as AuthenticatedCompanySettingsIndexRouteImport } from './routes/_authenticated/company-settings/index'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -89,6 +90,12 @@ const AuthenticatedCustomersIndexRoute =
     path: '/customers/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCompanySettingsIndexRoute =
+  AuthenticatedCompanySettingsIndexRouteImport.update({
+    id: '/company-settings/',
+    path: '/company-settings/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/forgot-password': typeof authForgotPasswordRoute
@@ -100,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
+  '/company-settings': typeof AuthenticatedCompanySettingsIndexRoute
   '/customers': typeof AuthenticatedCustomersIndexRoute
   '/real-estate': typeof AuthenticatedRealEstateIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
@@ -114,6 +122,7 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
+  '/company-settings': typeof AuthenticatedCompanySettingsIndexRoute
   '/customers': typeof AuthenticatedCustomersIndexRoute
   '/real-estate': typeof AuthenticatedRealEstateIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
@@ -130,6 +139,7 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/company-settings/': typeof AuthenticatedCompanySettingsIndexRoute
   '/_authenticated/customers/': typeof AuthenticatedCustomersIndexRoute
   '/_authenticated/real-estate/': typeof AuthenticatedRealEstateIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
@@ -146,6 +156,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
+    | '/company-settings'
     | '/customers'
     | '/real-estate'
     | '/users'
@@ -160,6 +171,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
+    | '/company-settings'
     | '/customers'
     | '/real-estate'
     | '/users'
@@ -175,6 +187,7 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/_authenticated/'
+    | '/_authenticated/company-settings/'
     | '/_authenticated/customers/'
     | '/_authenticated/real-estate/'
     | '/_authenticated/users/'
@@ -285,11 +298,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCustomersIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/company-settings/': {
+      id: '/_authenticated/company-settings/'
+      path: '/company-settings'
+      fullPath: '/company-settings'
+      preLoaderRoute: typeof AuthenticatedCompanySettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedCompanySettingsIndexRoute: typeof AuthenticatedCompanySettingsIndexRoute
   AuthenticatedCustomersIndexRoute: typeof AuthenticatedCustomersIndexRoute
   AuthenticatedRealEstateIndexRoute: typeof AuthenticatedRealEstateIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
@@ -297,6 +318,8 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedCompanySettingsIndexRoute:
+    AuthenticatedCompanySettingsIndexRoute,
   AuthenticatedCustomersIndexRoute: AuthenticatedCustomersIndexRoute,
   AuthenticatedRealEstateIndexRoute: AuthenticatedRealEstateIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
