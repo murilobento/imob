@@ -41,17 +41,17 @@ export function DataTableToolbar<TData>({
             onChange={(event) =>
               table.getColumn(searchKey)?.setFilterValue(event.target.value)
             }
-            className='h-8 w-[150px] lg:w-[250px]'
+            className='h-8 w-full sm:w-[150px] lg:w-[250px]'
           />
         ) : (
           <Input
             placeholder={searchPlaceholder}
             value={table.getState().globalFilter ?? ''}
             onChange={(event) => table.setGlobalFilter(event.target.value)}
-            className='h-8 w-[150px] lg:w-[250px]'
+            className='h-8 w-full sm:w-[150px] lg:w-[250px]'
           />
         )}
-        <div className='flex gap-x-2'>
+        <div className='flex flex-wrap gap-2 w-full sm:w-auto'>
           {filters.map((filter) => {
             const column = table.getColumn(filter.columnId)
             if (!column) return null
@@ -64,20 +64,20 @@ export function DataTableToolbar<TData>({
               />
             )
           })}
+          {isFiltered && (
+            <Button
+              variant='ghost'
+              onClick={() => {
+                table.resetColumnFilters()
+                table.setGlobalFilter('')
+              }}
+              className='h-8 px-2 lg:px-3'
+            >
+              Limpar
+              <Cross2Icon className='ms-2 h-4 w-4' />
+            </Button>
+          )}
         </div>
-        {isFiltered && (
-          <Button
-            variant='ghost'
-            onClick={() => {
-              table.resetColumnFilters()
-              table.setGlobalFilter('')
-            }}
-            className='h-8 px-2 lg:px-3'
-          >
-            Limpar
-            <Cross2Icon className='ms-2 h-4 w-4' />
-          </Button>
-        )}
       </div>
       <DataTableViewOptions table={table} />
     </div>

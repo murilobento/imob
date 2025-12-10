@@ -11,6 +11,7 @@ import {
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table'
+import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
 import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
 import {
@@ -21,9 +22,11 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table'
-import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { DataTablePagination } from '@/components/data-table'
+import { RealEstateTableToolbar } from './real-estate-table-toolbar'
 import { type RealEstate } from '../data/schema'
 import { columns } from './real-estate-columns'
+import { RealEstateCardList } from './real-estate-card-list'
 
 type DataTableProps = {
     data: RealEstate[]
@@ -35,6 +38,7 @@ export function RealEstateTable({ data, search, navigate }: DataTableProps) {
     const [rowSelection, setRowSelection] = useState({})
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
     const [sorting, setSorting] = useState<SortingState>([])
+    const isMobile = useIsMobile()
 
     const {
         pagination,
@@ -47,6 +51,11 @@ export function RealEstateTable({ data, search, navigate }: DataTableProps) {
         navigate,
         pagination: { defaultPage: 1, defaultPageSize: 10 },
         globalFilter: { enabled: true },
+        columnFilters: [
+            { columnId: 'type', searchKey: 'type', type: 'array' },
+            { columnId: 'finality', searchKey: 'finality', type: 'array' },
+            { columnId: 'is_available', searchKey: 'status', type: 'array' },
+        ],
     })
 
     const table = useReactTable({
@@ -79,76 +88,77 @@ export function RealEstateTable({ data, search, navigate }: DataTableProps) {
 
     return (
         <div className='flex flex-1 flex-col gap-4'>
-            <DataTableToolbar
-                table={table}
-                searchPlaceholder='Filtrar imóveis...'
-            />
-            <div className='overflow-hidden rounded-md border'>
-                <Table>
-                    <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id} className='group/row'>
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead
-                                            key={header.id}
-                                            colSpan={header.colSpan}
-                                            className={cn(
-                                                'bg-background group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
-                                                header.column.columnDef.meta?.className,
-                                                header.column.columnDef.meta?.thClassName
-                                            )}
-                                        >
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
+            <RealEstateTableToolbar table={table} />
+            {!isMobile ? (
+                <div className='overflow-hidden rounded-md border'>
+                    <Table>
+                        <TableHeader>
+                            {table.getHeaderGroups().map((headerGroup) => (
+                                <TableRow key={headerGroup.id} className='group/row'>
+                                    {headerGroup.headers.map((header) => {
+                                        return (
+                                            <TableHead
+                                                key={header.id}
+                                                colSpan={header.colSpan}
+                                                className={cn(
+                                                    'bg-background group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
+                                                    header.column.columnDef.meta?.className,
+                                                    header.column.columnDef.meta?.thClassName
                                                 )}
-                                        </TableHead>
-                                    )
-                                })}
-                            </TableRow>
-                        ))}
-                    </TableHeader>
-                    <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && 'selected'}
-                                    className='group/row'
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell
-                                            key={cell.id}
-                                            className={cn(
-                                                'bg-background group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
-                                                cell.column.columnDef.meta?.className,
-                                                cell.column.columnDef.meta?.tdClassName
-                                            )}
-                                        >
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
-                                    ))}
+                                            >
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )}
+                                            </TableHead>
+                                        )
+                                    })}
                                 </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className='h-24 text-center'
-                                >
-                                    Nenhum imóvel encontrado.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
+                            ))}
+                        </TableHeader>
+                        <TableBody>
+                            {table.getRowModel().rows?.length ? (
+                                table.getRowModel().rows.map((row) => (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && 'selected'}
+                                        className='group/row'
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell
+                                                key={cell.id}
+                                                className={cn(
+                                                    'bg-background group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
+                                                    cell.column.columnDef.meta?.className,
+                                                    cell.column.columnDef.meta?.tdClassName
+                                                )}
+                                            >
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={columns.length}
+                                        className='h-24 text-center'
+                                    >
+                                        Nenhum imóvel encontrado.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
+            ) : (
+                <RealEstateCardList table={table} />
+            )}
             <DataTablePagination table={table} className='mt-auto' />
         </div>
     )

@@ -70,7 +70,15 @@ export const customersColumns: ColumnDef<Customer>[] = [
         cell: ({ row }) => {
             const status = row.getValue('status') as string
             return (
-                <Badge variant={status === 'active' ? 'default' : 'secondary'}>
+                <Badge
+                    variant='outline'
+                    className={cn(
+                        'capitalize',
+                        status === 'active'
+                            ? 'border-teal-200 bg-teal-100/30 text-teal-900 dark:text-teal-200'
+                            : 'border-neutral-300 bg-neutral-300/40 text-neutral-600'
+                    )}
+                >
                     {status === 'active' ? 'Ativo' : 'Inativo'}
                 </Badge>
             )

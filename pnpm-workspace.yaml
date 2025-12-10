@@ -1,2 +1,6 @@
 packages:
-  - 'server'
+  - server
+
+onlyBuiltDependencies:
+  - '@swc/core'
+  - esbuild

@@ -209,10 +209,7 @@ export function CustomersActionDialog({
                                     ? 'Editar Cliente'
                                     : 'Novo Cliente'}
                         </DialogTitle>
-                        <div className='flex items-center space-x-2'>
-                            <Label htmlFor='status-switch' className='text-sm text-muted-foreground'>
-                                Inativo
-                            </Label>
+                        <div className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full border">
                             <FormField
                                 control={form.control}
                                 name='status'
@@ -224,11 +221,12 @@ export function CustomersActionDialog({
                                             field.onChange(checked ? 'active' : 'inactive')
                                         }
                                         disabled={readOnly}
+                                        className="data-[state=checked]:bg-green-500"
                                     />
                                 )}
                             />
-                            <Label htmlFor='status-switch' className='text-sm text-muted-foreground'>
-                                Ativo
+                            <Label htmlFor='status-switch' className="text-sm font-medium cursor-pointer">
+                                {form.watch('status') === 'active' ? 'Ativo' : 'Inativo'}
                             </Label>
                         </div>
                     </div>

@@ -1,5 +1,6 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { type RealEstate } from '../data/schema'
@@ -93,6 +94,9 @@ export const columns: ColumnDef<RealEstate>[] = [
             }
             return <Badge variant='outline'>{map[val] || val}</Badge>
         },
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id))
+        },
     },
     {
         accessorKey: 'situation',
@@ -117,7 +121,12 @@ export const columns: ColumnDef<RealEstate>[] = [
         cell: ({ row }) => {
             const val = row.getValue('sale_value') as number
             return val ? <div>{formatCurrency(val)}</div> : <div>-</div>
-        }
+        },
+        filterFn: (row, id, value) => {
+            const rowValue = row.getValue(id) as number
+            // Value is [min, max]
+            return rowValue >= value[0] && rowValue <= value[1]
+        },
     },
     {
         accessorKey: 'rental_value',
@@ -132,12 +141,27 @@ export const columns: ColumnDef<RealEstate>[] = [
     {
         accessorKey: 'is_available',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title='Ativo' />
+            <DataTableColumnHeader column={column} title='Status' />
         ),
         cell: ({ row }) => {
-            const active = row.getValue('is_available')
-            return active ? <Badge>Sim</Badge> : <Badge variant='destructive'>Não</Badge>
-        }
+            const status = row.getValue('is_available')
+            return (
+                <Badge
+                    variant='outline'
+                    className={cn(
+                        'capitalize',
+                        status
+                            ? 'border-teal-200 bg-teal-100/30 text-teal-900 dark:text-teal-200'
+                            : 'border-neutral-300 bg-neutral-300/40 text-neutral-600'
+                    )}
+                >
+                    {status ? 'Disponível' : 'Indisponível'}
+                </Badge>
+            )
+        },
+        filterFn: (row, id, value) => {
+            return value.includes(String(row.getValue(id)))
+        },
     },
     {
         accessorKey: 'owner_name',

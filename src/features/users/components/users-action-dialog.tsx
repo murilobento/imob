@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/password-input'
 import { createUser, updateUser } from '../api/users-api'
 import { type User } from '../data/schema'
@@ -85,21 +86,21 @@ export function UsersActionDialog({
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
-          name: currentRow.name,
-          email: currentRow.email,
-          status: currentRow.status || 'active',
-          password: '',
-          confirmPassword: '',
-          isEdit,
-        }
+        name: currentRow.name,
+        email: currentRow.email,
+        status: currentRow.status || 'active',
+        password: '',
+        confirmPassword: '',
+        isEdit,
+      }
       : {
-          name: '',
-          email: '',
-          status: 'active',
-          password: '',
-          confirmPassword: '',
-          isEdit,
-        },
+        name: '',
+        email: '',
+        status: 'active',
+        password: '',
+        confirmPassword: '',
+        isEdit,
+      },
   })
 
   const onSubmit = async (values: UserForm) => {
@@ -146,13 +147,34 @@ export function UsersActionDialog({
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
-          <DialogTitle>
-            {isEdit
-              ? readOnly
-                ? 'Visualizar Usuário'
-                : 'Editar Usuário'
-              : 'Adicionar Novo Usuário'}
-          </DialogTitle>
+          <div className='flex items-center gap-4'>
+            <DialogTitle>
+              {isEdit
+                ? readOnly
+                  ? 'Visualizar Usuário'
+                  : 'Editar Usuário'
+                : 'Adicionar Novo Usuário'}
+            </DialogTitle>
+            <div className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full border">
+              <FormField
+                control={form.control}
+                name='status'
+                render={({ field }) => (
+                  <Switch
+                    checked={field.value === 'active'}
+                    onCheckedChange={(checked) =>
+                      field.onChange(checked ? 'active' : 'inactive')
+                    }
+                    disabled={readOnly || isLoading}
+                    className="data-[state=checked]:bg-green-500"
+                  />
+                )}
+              />
+              <Label className="text-sm font-medium cursor-pointer">
+                {form.watch('status') === 'active' ? 'Ativo' : 'Inativo'}
+              </Label>
+            </div>
+          </div>
           <DialogDescription>
             {isEdit
               ? readOnly
@@ -205,25 +227,7 @@ export function UsersActionDialog({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name='status'
-              render={({ field }) => (
-                <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                  <FormLabel className='col-span-2 text-end'>Status</FormLabel>
-                  <FormControl>
-                    <Switch
-                      checked={field.value === 'active'}
-                      onCheckedChange={(checked) =>
-                        field.onChange(checked ? 'active' : 'inactive')
-                      }
-                      disabled={readOnly || isLoading}
-                    />
-                  </FormControl>
-                  <FormMessage className='col-span-4 col-start-3' />
-                </FormItem>
-              )}
-            />
+
             <FormField
               control={form.control}
               name='password'
