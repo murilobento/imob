@@ -21,6 +21,10 @@ export const getRealEstates = async (): Promise<RealEstate[]> => {
     return callApi<RealEstate[]>('GET', '/real-estate')
 }
 
+export const getNextCode = async (type: string): Promise<{ code: string }> => {
+    return callApi<{ code: string }>('GET', `/real-estate/next-code?type=${type}`)
+}
+
 export const createRealEstate = async (data: Partial<RealEstate>): Promise<RealEstate> => {
     return callApi<RealEstate>('POST', '/real-estate', data)
 }

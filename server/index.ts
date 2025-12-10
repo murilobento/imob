@@ -420,6 +420,51 @@ initRealEstateSchema().catch(() => {
   // Silently fail real estate schema initialization
 })
 
+app.get('/api/real-estate/next-code', async (c) => {
+  const type = c.req.query('type')
+  if (!type) {
+    return c.json({ error: 'Type is required' }, 400)
+  }
+
+  let prefix = ''
+  switch (type) {
+    case 'HOUSE':
+      prefix = 'CASA'
+      break
+    case 'APARTMENT':
+      prefix = 'AP'
+      break
+    case 'LAND':
+      prefix = 'TER'
+      break
+    case 'COMMERCIAL':
+      prefix = 'COM'
+      break
+    case 'RURAL':
+      prefix = 'RUR'
+      break
+    default:
+      prefix = 'IMO'
+  }
+
+  const result = await pool.query(
+    'SELECT code FROM real_estate WHERE code LIKE $1 ORDER BY code DESC LIMIT 1',
+    [`${prefix}-%`]
+  )
+
+  let nextNumber = 1
+  if (result.rows.length > 0) {
+    const lastCode = result.rows[0].code
+    const lastNumber = parseInt(lastCode.split('-')[1])
+    if (!isNaN(lastNumber)) {
+      nextNumber = lastNumber + 1
+    }
+  }
+
+  const nextCode = `${prefix}-${nextNumber.toString().padStart(6, '0')}`
+  return c.json({ code: nextCode })
+})
+
 app.get('/api/real-estate', async (c) => {
   const result = await pool.query(`
     SELECT r.*, c.name as owner_name 

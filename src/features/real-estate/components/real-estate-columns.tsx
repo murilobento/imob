@@ -4,7 +4,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { type RealEstate } from '../data/schema'
 import { DataTableRowActions } from './real-estate-row-actions'
-import { maskCurrency } from '@/lib/masks'
+import { formatCurrency } from '@/lib/masks'
 
 export const columns: ColumnDef<RealEstate>[] = [
     {
@@ -116,7 +116,7 @@ export const columns: ColumnDef<RealEstate>[] = [
         ),
         cell: ({ row }) => {
             const val = row.getValue('sale_value') as number
-            return val ? <div>{maskCurrency(val.toString())}</div> : <div>-</div>
+            return val ? <div>{formatCurrency(val)}</div> : <div>-</div>
         }
     },
     {
@@ -126,7 +126,7 @@ export const columns: ColumnDef<RealEstate>[] = [
         ),
         cell: ({ row }) => {
             const val = row.getValue('rental_value') as number
-            return val ? <div>{maskCurrency(val.toString())}</div> : <div>-</div>
+            return val ? <div>{formatCurrency(val)}</div> : <div>-</div>
         }
     },
     {

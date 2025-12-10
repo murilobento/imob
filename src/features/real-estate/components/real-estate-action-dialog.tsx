@@ -3,8 +3,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
-import { Loader2, Search } from 'lucide-react'
+import { Loader2, Search, Check, ChevronsUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import {
     Dialog,
     DialogContent,
@@ -30,55 +31,68 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from '@/components/ui/command'
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover'
 import { Switch } from '@/components/ui/switch'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Label } from '@/components/ui/label'
-import { maskCEP, maskCurrency } from '@/lib/masks'
-import { createRealEstate, updateRealEstate } from '../api/real-estate-api'
+import { maskCEP, maskCurrency, formatCurrency } from '@/lib/masks'
+import { createRealEstate, updateRealEstate, getNextCode } from '../api/real-estate-api'
 import { useRealEstate } from './real-estate-provider'
 import { type RealEstate } from '../data/schema'
 import { getCustomers } from '@/features/customers/api/customers-api'
 import { type Customer } from '@/features/customers/data/schema'
 
 const formSchema = z.object({
-    id: z.string().optional(),
-    code: z.string().optional(),
+    id: z.string().optional(), // id is usually handled separately but optional in form
+    code: z.string().optional().nullable(),
     title: z.string().min(1, 'Título é obrigatório'),
     type: z.enum(['HOUSE', 'APARTMENT', 'LAND', 'COMMERCIAL', 'RURAL']),
 
-    street: z.string().optional(),
-    number: z.string().optional(),
-    complement: z.string().optional(),
-    neighborhood: z.string().optional(),
-    city: z.string().optional(),
-    state: z.string().optional(),
-    zip: z.string().optional(),
+    street: z.string().optional().nullable(),
+    number: z.string().optional().nullable(),
+    complement: z.string().optional().nullable(),
+    neighborhood: z.string().optional().nullable(),
+    city: z.string().optional().nullable(),
+    state: z.string().optional().nullable(),
+    zip: z.string().optional().nullable(),
 
     finality: z.enum(['SALE', 'RENT', 'BOTH']),
     situation: z.enum(['AVAILABLE', 'OCCUPIED', 'UNAVAILABLE']),
 
-    built_area: z.string().optional(),
-    total_area: z.string().optional(),
-    bedrooms: z.string().optional(),
-    suites: z.string().optional(),
-    bathrooms: z.string().optional(),
-    garage_spots: z.string().optional(),
+    built_area: z.string().optional().nullable(),
+    total_area: z.string().optional().nullable(),
+    bedrooms: z.string().optional().nullable(),
+    suites: z.string().optional().nullable(),
+    bathrooms: z.string().optional().nullable(),
+    garage_spots: z.string().optional().nullable(),
     is_furnished: z.boolean().default(false).optional(),
 
-    rental_value: z.string().optional(),
-    sale_value: z.string().optional(),
-    condominium_value: z.string().optional(),
-    iptu_value: z.string().optional(),
+    rental_value: z.string().optional().nullable(),
+    sale_value: z.string().optional().nullable(),
+    condominium_value: z.string().optional().nullable(),
+    iptu_value: z.string().optional().nullable(),
 
-    owner_id: z.string().optional(),
-    registry_id: z.string().optional(),
-    registration_id: z.string().optional(),
-    legal_notes: z.string().optional(),
+    owner_id: z.string().optional().nullable(),
+    registry_id: z.string().optional().nullable(),
+    registration_id: z.string().optional().nullable(),
+    legal_notes: z.string().optional().nullable(),
 
-    photos: z.string().optional(),
-    videos: z.string().optional(),
-    blueprints: z.string().optional(),
+    photos: z.string().optional().nullable(),
+    videos: z.string().optional().nullable(),
+    blueprints: z.string().optional().nullable(),
 
     is_available: z.boolean().default(true).optional(),
 })
@@ -147,40 +161,79 @@ export function RealEstateActionDialog({ currentRow, open, onOpenChange, readOnl
                     suites: currentRow.suites?.toString(),
                     bathrooms: currentRow.bathrooms?.toString(),
                     garage_spots: currentRow.garage_spots?.toString(),
-                    rental_value: currentRow.rental_value ? maskCurrency(currentRow.rental_value.toString()) : '',
-                    sale_value: currentRow.sale_value ? maskCurrency(currentRow.sale_value.toString()) : '',
-                    condominium_value: currentRow.condominium_value ? maskCurrency(currentRow.condominium_value.toString()) : '',
-                    iptu_value: currentRow.iptu_value ? maskCurrency(currentRow.iptu_value.toString()) : '',
+                    rental_value: currentRow.rental_value ? formatCurrency(currentRow.rental_value) : '',
+                    sale_value: currentRow.sale_value ? formatCurrency(currentRow.sale_value) : '',
+                    condominium_value: currentRow.condominium_value ? formatCurrency(currentRow.condominium_value) : '',
+                    iptu_value: currentRow.iptu_value ? formatCurrency(currentRow.iptu_value) : '',
                 })
             } else {
                 form.reset({
                     title: '',
+                    code: '',
                     type: 'HOUSE',
+                    street: '',
+                    number: '',
+                    complement: '',
+                    neighborhood: '',
+                    city: '',
+                    state: '',
+                    zip: '',
                     finality: 'SALE',
                     situation: 'AVAILABLE',
+                    built_area: '',
+                    total_area: '',
+                    bedrooms: '',
+                    suites: '',
+                    bathrooms: '',
+                    garage_spots: '',
+                    rental_value: '',
+                    sale_value: '',
+                    condominium_value: '',
+                    iptu_value: '',
+                    owner_id: '',
+                    registry_id: '',
+                    registration_id: '',
+                    legal_notes: '',
+                    photos: '',
+                    videos: '',
+                    blueprints: '',
                     is_available: true,
                     is_furnished: false,
                 })
+                // Fetch initial code for default type
+                getNextCode('HOUSE').then(res => form.setValue('code', res.code))
             }
         }
     }, [open, currentRow, form])
+
+    // Auto-generate code when type changes in creation mode
+    useEffect(() => {
+        if (!currentRow && open) {
+            const subscription = form.watch((value, { name }) => {
+                if (name === 'type' && value.type) {
+                    getNextCode(value.type).then(res => form.setValue('code', res.code))
+                }
+            })
+            return () => subscription.unsubscribe()
+        }
+    }, [form, currentRow, open])
 
     const onSubmit = async (values: RealEstateForm) => {
         setIsLoading(true)
         try {
             const dbValues = {
                 ...values,
-                built_area: values.built_area ? parseFloat(values.built_area) : undefined,
-                total_area: values.total_area ? parseFloat(values.total_area) : undefined,
-                bedrooms: values.bedrooms ? parseInt(values.bedrooms) : undefined,
-                suites: values.suites ? parseInt(values.suites) : undefined,
-                bathrooms: values.bathrooms ? parseInt(values.bathrooms) : undefined,
-                garage_spots: values.garage_spots ? parseInt(values.garage_spots) : undefined,
-                rental_value: values.rental_value ? parseFloat(values.rental_value.replace(/\D/g, '')) / 100 : undefined,
-                sale_value: values.sale_value ? parseFloat(values.sale_value.replace(/\D/g, '')) / 100 : undefined,
-                condominium_value: values.condominium_value ? parseFloat(values.condominium_value.replace(/\D/g, '')) / 100 : undefined,
-                iptu_value: values.iptu_value ? parseFloat(values.iptu_value.replace(/\D/g, '')) / 100 : undefined,
-                owner_id: values.owner_id || undefined,
+                built_area: values.built_area ? parseFloat(values.built_area) : null,
+                total_area: values.total_area ? parseFloat(values.total_area) : null,
+                bedrooms: values.bedrooms ? parseInt(values.bedrooms) : null,
+                suites: values.suites ? parseInt(values.suites) : null,
+                bathrooms: values.bathrooms ? parseInt(values.bathrooms) : null,
+                garage_spots: values.garage_spots ? parseInt(values.garage_spots) : null,
+                rental_value: values.rental_value ? parseFloat(values.rental_value.replace(/\D/g, '')) / 100 : null,
+                sale_value: values.sale_value ? parseFloat(values.sale_value.replace(/\D/g, '')) / 100 : null,
+                condominium_value: values.condominium_value ? parseFloat(values.condominium_value.replace(/\D/g, '')) / 100 : null,
+                iptu_value: values.iptu_value ? parseFloat(values.iptu_value.replace(/\D/g, '')) / 100 : null,
+                owner_id: values.owner_id || null,
             }
 
             if (currentRow?.id) {
@@ -222,16 +275,21 @@ export function RealEstateActionDialog({ currentRow, open, onOpenChange, readOnl
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className='max-h-[90vh] overflow-hidden sm:max-w-5xl'>
                 <DialogHeader>
-                    <div className='flex items-center justify-between'>
-                        <DialogTitle>{currentRow ? 'Editar Imóvel' : 'Novo Imóvel'}</DialogTitle>
-                        <div className="flex items-center gap-2">
-                            <Label htmlFor="available">Disponível</Label>
-                            <Switch
-                                id="available"
-                                checked={form.watch('is_available')}
-                                onCheckedChange={v => form.setValue('is_available', v)}
-                                disabled={readOnly}
-                            />
+                    <div className='flex items-center justify-between w-full'>
+                        <div className="flex items-center gap-4">
+                            <DialogTitle>{currentRow ? 'Editar Imóvel' : 'Novo Imóvel'}</DialogTitle>
+                            <div className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full border">
+                                <Switch
+                                    id="available"
+                                    checked={form.watch('is_available')}
+                                    onCheckedChange={v => form.setValue('is_available', v)}
+                                    disabled={readOnly}
+                                    className="data-[state=checked]:bg-green-500"
+                                />
+                                <Label htmlFor="available" className="text-sm font-medium cursor-pointer">
+                                    {form.watch('is_available') ? 'Disponível' : 'Indisponível'}
+                                </Label>
+                            </div>
                         </div>
                     </div>
                     <DialogDescription>
@@ -242,73 +300,210 @@ export function RealEstateActionDialog({ currentRow, open, onOpenChange, readOnl
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className='h-full'>
                         <ScrollArea className='h-[60vh] pr-4'>
-                            <Tabs defaultValue="identification" className="w-full">
+                            <Tabs defaultValue="main" className="w-full">
                                 <TabsList className="mb-4">
-                                    <TabsTrigger value="identification">Identificação</TabsTrigger>
+                                    <TabsTrigger value="main">Dados Principais</TabsTrigger>
                                     <TabsTrigger value="address">Endereço</TabsTrigger>
-                                    <TabsTrigger value="characteristics">Características</TabsTrigger>
-                                    <TabsTrigger value="values">Valores</TabsTrigger>
                                     <TabsTrigger value="docs">Docs & Mídia</TabsTrigger>
                                 </TabsList>
 
-                                {/* IDENTIFICATION */}
-                                <TabsContent value="identification" className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <FormField control={form.control} name="title" render={({ field }) => (
-                                        <FormItem className="col-span-2">
-                                            <FormLabel>Título do Anúncio</FormLabel>
-                                            <FormControl><Input {...field} readOnly={readOnly} /></FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="code" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Código (Ref)</FormLabel>
-                                            <FormControl><Input {...field} readOnly={readOnly} /></FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="type" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Tipo de Imóvel</FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value} disabled={readOnly}>
-                                                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
-                                                <SelectContent>
-                                                    <SelectItem value="HOUSE">Casa</SelectItem>
-                                                    <SelectItem value="APARTMENT">Apartamento</SelectItem>
-                                                    <SelectItem value="LAND">Terreno</SelectItem>
-                                                    <SelectItem value="COMMERCIAL">Comercial</SelectItem>
-                                                    <SelectItem value="RURAL">Rural</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="finality" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Finalidade</FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value} disabled={readOnly}>
-                                                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
-                                                <SelectContent>
-                                                    <SelectItem value="SALE">Venda</SelectItem>
-                                                    <SelectItem value="RENT">Locação</SelectItem>
-                                                    <SelectItem value="BOTH">Venda e Locação</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="situation" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Situação</FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value} disabled={readOnly}>
-                                                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
-                                                <SelectContent>
-                                                    <SelectItem value="AVAILABLE">Disponível</SelectItem>
-                                                    <SelectItem value="OCCUPIED">Ocupado</SelectItem>
-                                                    <SelectItem value="UNAVAILABLE">Indisponível</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </FormItem>
-                                    )} />
+                                {/* MAIN DATA (Merged: Identification, Characteristics, Values) */}
+                                <TabsContent value="main" className="space-y-6">
+                                    {/* Section: Identification */}
+                                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                                        <FormField control={form.control} name="type" render={({ field }) => (
+                                            <FormItem className="md:col-span-3">
+                                                <FormLabel>Tipo</FormLabel>
+                                                <Select onValueChange={field.onChange} defaultValue={field.value} disabled={readOnly || !!currentRow}>
+                                                    <FormControl><SelectTrigger className="w-full"><SelectValue /></SelectTrigger></FormControl>
+                                                    <SelectContent>
+                                                        <SelectItem value="HOUSE">Casa</SelectItem>
+                                                        <SelectItem value="APARTMENT">Apto</SelectItem>
+                                                        <SelectItem value="LAND">Terreno</SelectItem>
+                                                        <SelectItem value="COMMERCIAL">Coml</SelectItem>
+                                                        <SelectItem value="RURAL">Rural</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )} />
+
+                                        <FormField control={form.control} name="code" render={({ field }) => (
+                                            <FormItem className="md:col-span-3">
+                                                <FormLabel>Código</FormLabel>
+                                                <FormControl><Input {...field} value={field.value || ''} readOnly={true} className="bg-muted" /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )} />
+
+                                        <FormField control={form.control} name="title" render={({ field }) => (
+                                            <FormItem className="md:col-span-6">
+                                                <FormLabel>Título do Anúncio</FormLabel>
+                                                <FormControl><Input {...field} readOnly={readOnly} /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )} />
+
+                                        <FormField control={form.control} name="finality" render={({ field }) => (
+                                            <FormItem className="md:col-span-3">
+                                                <FormLabel>Finalidade</FormLabel>
+                                                <Select onValueChange={field.onChange} defaultValue={field.value} disabled={readOnly}>
+                                                    <FormControl><SelectTrigger className="w-full"><SelectValue /></SelectTrigger></FormControl>
+                                                    <SelectContent>
+                                                        <SelectItem value="SALE">Venda</SelectItem>
+                                                        <SelectItem value="RENT">Locação</SelectItem>
+                                                        <SelectItem value="BOTH">Ambos</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormItem>
+                                        )} />
+
+                                        <FormField control={form.control} name="owner_id" render={({ field }) => (
+                                            <FormItem className="md:col-span-6">
+                                                <FormLabel>Proprietário</FormLabel>
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <FormControl>
+                                                            <Button
+                                                                variant="outline"
+                                                                role="combobox"
+                                                                className={cn(
+                                                                    "w-full justify-between",
+                                                                    !field.value && "text-muted-foreground"
+                                                                )}
+                                                                disabled={readOnly}
+                                                            >
+                                                                {field.value
+                                                                    ? customers.find(c => c.id === field.value)?.name
+                                                                    : "Selecione o proprietário"}
+                                                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                            </Button>
+                                                        </FormControl>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                                                        <Command>
+                                                            <CommandInput placeholder="Buscar proprietário..." />
+                                                            <CommandList>
+                                                                <CommandEmpty>Nenhum proprietário encontrado.</CommandEmpty>
+                                                                <CommandGroup>
+                                                                    {customers.map((c) => (
+                                                                        <CommandItem
+                                                                            value={c.name}
+                                                                            key={c.id}
+                                                                            onSelect={() => {
+                                                                                form.setValue("owner_id", c.id!)
+                                                                            }}
+                                                                        >
+                                                                            <Check
+                                                                                className={cn(
+                                                                                    "mr-2 h-4 w-4",
+                                                                                    c.id === field.value
+                                                                                        ? "opacity-100"
+                                                                                        : "opacity-0"
+                                                                                )}
+                                                                            />
+                                                                            {c.name}
+                                                                        </CommandItem>
+                                                                    ))}
+                                                                </CommandGroup>
+                                                            </CommandList>
+                                                        </Command>
+                                                    </PopoverContent>
+                                                </Popover>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )} />
+
+                                        <FormField control={form.control} name="is_furnished" render={({ field }) => (
+                                            <FormItem className="md:col-span-3">
+                                                <FormLabel>Mobiliado?</FormLabel>
+                                                <FormControl>
+                                                    <div className="flex h-9 w-full items-center rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                                        <Switch checked={field.value} onCheckedChange={field.onChange} disabled={readOnly} />
+                                                        <span className="ml-2 text-muted-foreground text-xs">{field.value ? 'Sim' : 'Não'}</span>
+                                                    </div>
+                                                </FormControl>
+                                            </FormItem>
+                                        )} />
+                                    </div>
+
+                                    <div className="border-t my-4" />
+
+                                    {/* Section: Characteristics */}
+                                    <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+                                        <FormField control={form.control} name="built_area" render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Área Útil (m²)</FormLabel>
+                                                <FormControl><Input {...field} value={field.value || ''} type="number" readOnly={readOnly} /></FormControl>
+                                            </FormItem>
+                                        )} />
+                                        <FormField control={form.control} name="total_area" render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Área Total (m²)</FormLabel>
+                                                <FormControl><Input {...field} value={field.value || ''} type="number" readOnly={readOnly} /></FormControl>
+                                            </FormItem>
+                                        )} />
+                                        <FormField control={form.control} name="bedrooms" render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Dormitórios</FormLabel>
+                                                <FormControl><Input {...field} value={field.value || ''} type="number" readOnly={readOnly} /></FormControl>
+                                            </FormItem>
+                                        )} />
+                                        <FormField control={form.control} name="suites" render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Suítes</FormLabel>
+                                                <FormControl><Input {...field} value={field.value || ''} type="number" readOnly={readOnly} /></FormControl>
+                                            </FormItem>
+                                        )} />
+                                        <FormField control={form.control} name="bathrooms" render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Banheiros</FormLabel>
+                                                <FormControl><Input {...field} value={field.value || ''} type="number" readOnly={readOnly} /></FormControl>
+                                            </FormItem>
+                                        )} />
+                                        <FormField control={form.control} name="garage_spots" render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Vagas</FormLabel>
+                                                <FormControl><Input {...field} value={field.value || ''} type="number" readOnly={readOnly} /></FormControl>
+                                            </FormItem>
+                                        )} />
+                                    </div>
+
+                                    <div className="border-t my-4" />
+
+                                    {/* Section: Values */}
+                                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                        {(form.watch('finality') === 'SALE' || form.watch('finality') === 'BOTH') && (
+                                            <FormField control={form.control} name="sale_value" render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Valor de Venda</FormLabel>
+                                                    <FormControl><Input {...field} value={field.value || ''} onChange={e => field.onChange(maskCurrency(e.target.value))} readOnly={readOnly} /></FormControl>
+                                                </FormItem>
+                                            )} />
+                                        )}
+                                        {(form.watch('finality') === 'RENT' || form.watch('finality') === 'BOTH') && (
+                                            <>
+                                                <FormField control={form.control} name="rental_value" render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Valor de Locação</FormLabel>
+                                                        <FormControl><Input {...field} value={field.value || ''} onChange={e => field.onChange(maskCurrency(e.target.value))} readOnly={readOnly} /></FormControl>
+                                                    </FormItem>
+                                                )} />
+                                                <FormField control={form.control} name="condominium_value" render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Valor Condomínio</FormLabel>
+                                                        <FormControl><Input {...field} value={field.value || ''} onChange={e => field.onChange(maskCurrency(e.target.value))} readOnly={readOnly} /></FormControl>
+                                                    </FormItem>
+                                                )} />
+                                                <FormField control={form.control} name="iptu_value" render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Valor IPTU</FormLabel>
+                                                        <FormControl><Input {...field} value={field.value || ''} onChange={e => field.onChange(maskCurrency(e.target.value))} readOnly={readOnly} /></FormControl>
+                                                    </FormItem>
+                                                )} />
+                                            </>
+                                        )}
+                                    </div>
                                 </TabsContent>
 
                                 {/* ADDRESS */}
@@ -321,6 +516,7 @@ export function RealEstateActionDialog({ currentRow, open, onOpenChange, readOnl
                                                     <div className="relative">
                                                         <Input
                                                             {...field}
+                                                            value={field.value || ''}
                                                             onChange={e => {
                                                                 field.onChange(maskCEP(e.target.value))
                                                                 if (e.target.value.length >= 9) handleCepBlur({ target: { value: e.target.value } } as any)
@@ -338,7 +534,7 @@ export function RealEstateActionDialog({ currentRow, open, onOpenChange, readOnl
                                         <FormField control={form.control} name="street" render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Rua</FormLabel>
-                                                <FormControl><Input {...field} readOnly={readOnly} /></FormControl>
+                                                <FormControl><Input {...field} value={field.value || ''} readOnly={readOnly} /></FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )} />
@@ -347,7 +543,7 @@ export function RealEstateActionDialog({ currentRow, open, onOpenChange, readOnl
                                         <FormField control={form.control} name="number" render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Número</FormLabel>
-                                                <FormControl><Input {...field} readOnly={readOnly} /></FormControl>
+                                                <FormControl><Input {...field} value={field.value || ''} readOnly={readOnly} /></FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )} />
@@ -356,7 +552,7 @@ export function RealEstateActionDialog({ currentRow, open, onOpenChange, readOnl
                                         <FormField control={form.control} name="complement" render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Complemento</FormLabel>
-                                                <FormControl><Input {...field} readOnly={readOnly} /></FormControl>
+                                                <FormControl><Input {...field} value={field.value || ''} readOnly={readOnly} /></FormControl>
                                             </FormItem>
                                         )} />
                                     </div>
@@ -364,7 +560,7 @@ export function RealEstateActionDialog({ currentRow, open, onOpenChange, readOnl
                                         <FormField control={form.control} name="neighborhood" render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Bairro</FormLabel>
-                                                <FormControl><Input {...field} readOnly={readOnly} /></FormControl>
+                                                <FormControl><Input {...field} value={field.value || ''} readOnly={readOnly} /></FormControl>
                                             </FormItem>
                                         )} />
                                     </div>
@@ -372,7 +568,7 @@ export function RealEstateActionDialog({ currentRow, open, onOpenChange, readOnl
                                         <FormField control={form.control} name="city" render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Cidade</FormLabel>
-                                                <FormControl><Input {...field} readOnly={readOnly} /></FormControl>
+                                                <FormControl><Input {...field} value={field.value || ''} readOnly={readOnly} /></FormControl>
                                             </FormItem>
                                         )} />
                                     </div>
@@ -380,119 +576,33 @@ export function RealEstateActionDialog({ currentRow, open, onOpenChange, readOnl
                                         <FormField control={form.control} name="state" render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>UF</FormLabel>
-                                                <FormControl><Input {...field} readOnly={readOnly} maxLength={2} /></FormControl>
+                                                <FormControl><Input {...field} value={field.value || ''} readOnly={readOnly} maxLength={2} /></FormControl>
                                             </FormItem>
                                         )} />
                                     </div>
-                                </TabsContent>
-
-                                {/* CHARACTERISTICS */}
-                                <TabsContent value="characteristics" className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                    <FormField control={form.control} name="built_area" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Área Útil (m²)</FormLabel>
-                                            <FormControl><Input {...field} type="number" readOnly={readOnly} /></FormControl>
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="total_area" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Área Total (m²)</FormLabel>
-                                            <FormControl><Input {...field} type="number" readOnly={readOnly} /></FormControl>
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="bedrooms" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Dormitórios</FormLabel>
-                                            <FormControl><Input {...field} type="number" readOnly={readOnly} /></FormControl>
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="suites" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Suítes</FormLabel>
-                                            <FormControl><Input {...field} type="number" readOnly={readOnly} /></FormControl>
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="bathrooms" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Banheiros</FormLabel>
-                                            <FormControl><Input {...field} type="number" readOnly={readOnly} /></FormControl>
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="garage_spots" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Vagas</FormLabel>
-                                            <FormControl><Input {...field} type="number" readOnly={readOnly} /></FormControl>
-                                        </FormItem>
-                                    )} />
-                                    <div className="col-span-2 flex items-center gap-2 pt-6">
-                                        <Label>Mobiliado?</Label>
-                                        <FormField control={form.control} name="is_furnished" render={({ field }) => (
-                                            <Switch checked={field.value} onCheckedChange={field.onChange} disabled={readOnly} />
-                                        )} />
-                                    </div>
-                                </TabsContent>
-
-                                {/* VALUES */}
-                                <TabsContent value="values" className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <FormField control={form.control} name="sale_value" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Valor de Venda</FormLabel>
-                                            <FormControl><Input {...field} onChange={e => field.onChange(maskCurrency(e.target.value))} readOnly={readOnly} /></FormControl>
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="rental_value" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Valor de Locação</FormLabel>
-                                            <FormControl><Input {...field} onChange={e => field.onChange(maskCurrency(e.target.value))} readOnly={readOnly} /></FormControl>
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="condominium_value" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Valor Condomínio</FormLabel>
-                                            <FormControl><Input {...field} onChange={e => field.onChange(maskCurrency(e.target.value))} readOnly={readOnly} /></FormControl>
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="iptu_value" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Valor IPTU</FormLabel>
-                                            <FormControl><Input {...field} onChange={e => field.onChange(maskCurrency(e.target.value))} readOnly={readOnly} /></FormControl>
-                                        </FormItem>
-                                    )} />
                                 </TabsContent>
 
                                 {/* DOCS & MEDIA */}
                                 <TabsContent value="docs" className="space-y-4">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <FormField control={form.control} name="owner_id" render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Proprietário</FormLabel>
-                                                <Select onValueChange={field.onChange} defaultValue={field.value} disabled={readOnly}>
-                                                    <FormControl><SelectTrigger><SelectValue placeholder="Selecione um cliente" /></SelectTrigger></FormControl>
-                                                    <SelectContent>
-                                                        {customers.map(c => (
-                                                            <SelectItem key={c.id} value={c.id!}>{c.name}</SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </FormItem>
-                                        )} />
+                                        {/* owner_id was moved to main tab */}
                                         <FormField control={form.control} name="registry_id" render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Matrícula</FormLabel>
-                                                <FormControl><Input {...field} readOnly={readOnly} /></FormControl>
+                                                <FormControl><Input {...field} value={field.value || ''} readOnly={readOnly} /></FormControl>
                                             </FormItem>
                                         )} />
                                         <FormField control={form.control} name="registration_id" render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Registro</FormLabel>
-                                                <FormControl><Input {...field} readOnly={readOnly} /></FormControl>
+                                                <FormControl><Input {...field} value={field.value || ''} readOnly={readOnly} /></FormControl>
                                             </FormItem>
                                         )} />
                                     </div>
                                     <FormField control={form.control} name="legal_notes" render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Observações Legais</FormLabel>
-                                            <FormControl><Textarea {...field} readOnly={readOnly} /></FormControl>
+                                            <FormControl><Textarea {...field} value={field.value || ''} readOnly={readOnly} /></FormControl>
                                         </FormItem>
                                     )} />
 
@@ -500,13 +610,13 @@ export function RealEstateActionDialog({ currentRow, open, onOpenChange, readOnl
                                         <FormField control={form.control} name="photos" render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Fotos (URLs por enquanto)</FormLabel>
-                                                <FormControl><Textarea placeholder='Cole URLs de imagens separadas por vírgula ou JSON' {...field} readOnly={readOnly} /></FormControl>
+                                                <FormControl><Textarea placeholder='Cole URLs de imagens separadas por vírgula ou JSON' {...field} value={field.value || ''} readOnly={readOnly} /></FormControl>
                                             </FormItem>
                                         )} />
                                         <FormField control={form.control} name="videos" render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Vídeos (URLs)</FormLabel>
-                                                <FormControl><Textarea {...field} readOnly={readOnly} /></FormControl>
+                                                <FormControl><Textarea {...field} value={field.value || ''} readOnly={readOnly} /></FormControl>
                                             </FormItem>
                                         )} />
                                     </div>
@@ -525,6 +635,6 @@ export function RealEstateActionDialog({ currentRow, open, onOpenChange, readOnl
                     </form>
                 </Form>
             </DialogContent>
-        </Dialog>
+        </Dialog >
     )
 }
