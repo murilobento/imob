@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import { AuthenticatedLayout } from '@/components/layout/authenticated-layout'
 import { authClient } from '@/lib/auth-client'
+import { AuthenticatedLayout } from '@/components/layout/authenticated-layout'
 import { DynamicTitle } from '@/components/shared/dynamic-title'
 
 export const Route = createFileRoute('/admin')({
@@ -21,7 +21,7 @@ export const Route = createFileRoute('/admin')({
 function RouteComponent() {
   return (
     <>
-      <DynamicTitle suffix="Admin" />
+      <DynamicTitle suffix='Admin' />
       <AuthenticatedLayout />
     </>
   )
