@@ -5,16 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, Instagram, Facebook, Phone, Mail } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-} from '@/components/ui/card'
-import { ConfigDrawer } from '@/components/config-drawer'
-import { Header } from '@/components/layout/header'
-import { Main } from '@/components/layout/main'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
+import { Card, CardContent } from '@/components/ui/card'
 import {
   Form,
   FormControl,
@@ -24,6 +15,12 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { ConfigDrawer } from '@/components/config-drawer'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
 
 const TikTokIcon = ({ className }: { className?: string }) => (
   <svg
@@ -104,7 +101,6 @@ export function CompanySettings() {
       logo: '',
     },
   })
-
 
   const uf = form.watch('uf')
   const logo = form.watch('logo')
@@ -363,7 +359,7 @@ export function CompanySettings() {
                 <div className='space-y-4'>
                   <div>
                     <h3 className='text-lg font-semibold'>Logo da Empresa</h3>
-                    <p className='text-sm text-muted-foreground'>
+                    <p className='text-muted-foreground text-sm'>
                       Imagem que representa sua empresa
                     </p>
                   </div>
@@ -373,10 +369,10 @@ export function CompanySettings() {
                         <img
                           src={logo}
                           alt='Logo Preview'
-                          className='h-full w-full rounded-lg object-cover border'
+                          className='h-full w-full rounded-lg border object-cover'
                         />
                       ) : (
-                        <div className='flex h-full w-full items-center justify-center rounded-lg border border-dashed bg-muted'>
+                        <div className='bg-muted flex h-full w-full items-center justify-center rounded-lg border border-dashed'>
                           <span className='text-muted-foreground text-xs font-medium'>
                             Sem Logo
                           </span>
@@ -389,7 +385,9 @@ export function CompanySettings() {
                           type='button'
                           variant='outline'
                           size='sm'
-                          onClick={() => document.getElementById('logo-upload')?.click()}
+                          onClick={() =>
+                            document.getElementById('logo-upload')?.click()
+                          }
                         >
                           Carregar Imagem
                         </Button>
@@ -424,7 +422,7 @@ export function CompanySettings() {
                 <div className='space-y-4'>
                   <div>
                     <h3 className='text-lg font-semibold'>Dados Gerais</h3>
-                    <p className='text-sm text-muted-foreground'>
+                    <p className='text-muted-foreground text-sm'>
                       Informações básicas da empresa
                     </p>
                   </div>
@@ -469,7 +467,9 @@ export function CompanySettings() {
                             <FormControl>
                               <Input
                                 {...field}
-                                onChange={(e) => field.onChange(maskCNPJ(e.target.value))}
+                                onChange={(e) =>
+                                  field.onChange(maskCNPJ(e.target.value))
+                                }
                               />
                             </FormControl>
                             <FormMessage />
@@ -487,7 +487,9 @@ export function CompanySettings() {
                             <FormControl>
                               <Input
                                 {...field}
-                                onChange={(e) => field.onChange(maskIE(e.target.value, uf))}
+                                onChange={(e) =>
+                                  field.onChange(maskIE(e.target.value, uf))
+                                }
                               />
                             </FormControl>
                             <FormMessage />
@@ -519,7 +521,7 @@ export function CompanySettings() {
                 <div className='space-y-4'>
                   <div>
                     <h3 className='text-lg font-semibold'>Endereço</h3>
-                    <p className='text-sm text-muted-foreground'>
+                    <p className='text-muted-foreground text-sm'>
                       Localização da empresa
                     </p>
                   </div>
@@ -648,7 +650,7 @@ export function CompanySettings() {
                 <div className='space-y-4'>
                   <div>
                     <h3 className='text-lg font-semibold'>Contato</h3>
-                    <p className='text-sm text-muted-foreground'>
+                    <p className='text-muted-foreground text-sm'>
                       Informações de contato e redes sociais
                     </p>
                   </div>
@@ -663,7 +665,11 @@ export function CompanySettings() {
                             <FormControl>
                               <div className='relative'>
                                 <Mail className='text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4' />
-                                <Input className='pl-9' {...field} type='email' />
+                                <Input
+                                  className='pl-9'
+                                  {...field}
+                                  type='email'
+                                />
                               </div>
                             </FormControl>
                             <FormMessage />
@@ -684,7 +690,9 @@ export function CompanySettings() {
                                 <Input
                                   className='pl-9'
                                   {...field}
-                                  onChange={(e) => field.onChange(maskPhone(e.target.value))}
+                                  onChange={(e) =>
+                                    field.onChange(maskPhone(e.target.value))
+                                  }
                                 />
                               </div>
                             </FormControl>
@@ -706,7 +714,9 @@ export function CompanySettings() {
                                 <Input
                                   className='pl-9'
                                   {...field}
-                                  onChange={(e) => field.onChange(maskPhone(e.target.value))}
+                                  onChange={(e) =>
+                                    field.onChange(maskPhone(e.target.value))
+                                  }
                                 />
                               </div>
                             </FormControl>
@@ -775,7 +785,9 @@ export function CompanySettings() {
                 <div className='border-t pt-4'>
                   <div className='flex justify-end'>
                     <Button type='submit' disabled={isLoading}>
-                      {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+                      {isLoading && (
+                        <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                      )}
                       Salvar alterações
                     </Button>
                   </div>

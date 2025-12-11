@@ -1,5 +1,5 @@
-import { CompanyLogo } from '@/components/shared/company-logo'
 import { cn } from '@/lib/utils'
+import { CompanyLogo } from '@/components/shared/company-logo'
 import dashboardDark from './assets/dashboard-dark.png'
 import dashboardLight from './assets/dashboard-light.png'
 import { UserAuthForm } from './components/user-auth-form'
@@ -10,7 +10,7 @@ export function SignIn2() {
       <div className='lg:p-8'>
         <div className='mx-auto flex w-full flex-col justify-center space-y-2 py-8 sm:w-[480px] sm:p-8'>
           <div className='mb-4 flex items-center justify-center'>
-            <CompanyLogo size="xl" className="[&_span]:text-xl" />
+            <CompanyLogo size='xl' className='[&_span]:text-xl' />
           </div>
         </div>
         <div className='mx-auto flex w-full max-w-sm flex-col justify-center space-y-2'>

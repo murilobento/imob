@@ -18,10 +18,10 @@ export function AppSidebar() {
 
   const user = session?.user
     ? {
-      name: session.user.name,
-      email: session.user.email,
-      avatar: session.user.image || sidebarData.user.avatar,
-    }
+        name: session.user.name,
+        email: session.user.email,
+        avatar: session.user.image || sidebarData.user.avatar,
+      }
     : sidebarData.user
 
   return (

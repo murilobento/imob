@@ -51,7 +51,7 @@ export function DataTableToolbar<TData>({
             className='h-8 w-full sm:w-[150px] lg:w-[250px]'
           />
         )}
-        <div className='flex flex-wrap gap-2 w-full sm:w-auto'>
+        <div className='flex w-full flex-wrap gap-2 sm:w-auto'>
           {filters.map((filter) => {
             const column = table.getColumn(filter.columnId)
             if (!column) return null

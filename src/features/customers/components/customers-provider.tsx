@@ -5,40 +5,43 @@ import { type Customer } from '../data/schema'
 type CustomersDialogType = 'add' | 'edit' | 'delete' | 'view'
 
 type CustomersContextType = {
-    open: CustomersDialogType | null
-    setOpen: (str: CustomersDialogType | null) => void
-    currentRow: Customer | null
-    setCurrentRow: React.Dispatch<React.SetStateAction<Customer | null>>
-    onSuccess: () => void
+  open: CustomersDialogType | null
+  setOpen: (str: CustomersDialogType | null) => void
+  currentRow: Customer | null
+  setCurrentRow: React.Dispatch<React.SetStateAction<Customer | null>>
+  onSuccess: () => void
 }
 
 const CustomersContext = React.createContext<CustomersContextType | null>(null)
 
 interface CustomersProviderProps {
-    children: React.ReactNode
-    onSuccess: () => void
+  children: React.ReactNode
+  onSuccess: () => void
 }
 
-export function CustomersProvider({ children, onSuccess }: CustomersProviderProps) {
-    const [open, setOpen] = useDialogState<CustomersDialogType>(null)
-    const [currentRow, setCurrentRow] = useState<Customer | null>(null)
+export function CustomersProvider({
+  children,
+  onSuccess,
+}: CustomersProviderProps) {
+  const [open, setOpen] = useDialogState<CustomersDialogType>(null)
+  const [currentRow, setCurrentRow] = useState<Customer | null>(null)
 
-    return (
-        <CustomersContext
-            value={{ open, setOpen, currentRow, setCurrentRow, onSuccess }}
-        >
-            {children}
-        </CustomersContext>
-    )
+  return (
+    <CustomersContext
+      value={{ open, setOpen, currentRow, setCurrentRow, onSuccess }}
+    >
+      {children}
+    </CustomersContext>
+  )
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useCustomers = () => {
-    const customersContext = React.useContext(CustomersContext)
+  const customersContext = React.useContext(CustomersContext)
 
-    if (!customersContext) {
-        throw new Error('useCustomers has to be used within <CustomersContext>')
-    }
+  if (!customersContext) {
+    throw new Error('useCustomers has to be used within <CustomersContext>')
+  }
 
-    return customersContext
+  return customersContext
 }

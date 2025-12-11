@@ -112,7 +112,6 @@ export function CompanySettingsDialog({
     },
   })
 
-
   const uf = form.watch('uf')
   const logo = form.watch('logo')
 
@@ -346,10 +345,10 @@ export function CompanySettingsDialog({
                       <img
                         src={logo}
                         alt='Logo Preview'
-                        className='h-full w-full rounded-lg object-cover border'
+                        className='h-full w-full rounded-lg border object-cover'
                       />
                     ) : (
-                      <div className='flex h-full w-full items-center justify-center rounded-lg border border-dashed bg-muted'>
+                      <div className='bg-muted flex h-full w-full items-center justify-center rounded-lg border border-dashed'>
                         <span className='text-muted-foreground text-sm font-medium'>
                           Sem Logo
                         </span>
@@ -361,7 +360,9 @@ export function CompanySettingsDialog({
                       <Button
                         type='button'
                         variant='outline'
-                        onClick={() => document.getElementById('logo-upload')?.click()}
+                        onClick={() =>
+                          document.getElementById('logo-upload')?.click()
+                        }
                       >
                         Carregar Imagem
                       </Button>

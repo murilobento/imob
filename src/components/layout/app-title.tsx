@@ -26,9 +26,9 @@ export function AppTitle() {
             className='grid flex-1 place-items-center text-center text-sm leading-tight'
           >
             {isCollapsed ? (
-              <CompanyLogo showName={false} size="sm" />
+              <CompanyLogo showName={false} size='sm' />
             ) : (
-              <CompanyLogo showName={true} size="md" />
+              <CompanyLogo showName={true} size='md' />
             )}
           </Link>
         </SidebarMenuButton>

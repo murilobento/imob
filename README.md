@@ -100,6 +100,7 @@ npx prisma db seed
 ⚠️ **Atenção:** Este comando apaga todos os dados do banco!
 
 **Credenciais do Admin Criado:**
+
 - **Email:** `admin@admin.com`
 - **Senha:** `admin123`
 

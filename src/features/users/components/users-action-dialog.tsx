@@ -24,8 +24,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
 import { PasswordInput } from '@/components/password-input'
 import { createUser, updateUser } from '../api/users-api'
 import { type User } from '../data/schema'
@@ -86,21 +86,21 @@ export function UsersActionDialog({
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
-        name: currentRow.name,
-        email: currentRow.email,
-        status: currentRow.status || 'active',
-        password: '',
-        confirmPassword: '',
-        isEdit,
-      }
+          name: currentRow.name,
+          email: currentRow.email,
+          status: currentRow.status || 'active',
+          password: '',
+          confirmPassword: '',
+          isEdit,
+        }
       : {
-        name: '',
-        email: '',
-        status: 'active',
-        password: '',
-        confirmPassword: '',
-        isEdit,
-      },
+          name: '',
+          email: '',
+          status: 'active',
+          password: '',
+          confirmPassword: '',
+          isEdit,
+        },
   })
 
   const onSubmit = async (values: UserForm) => {
@@ -155,7 +155,7 @@ export function UsersActionDialog({
                   : 'Editar Usuário'
                 : 'Adicionar Novo Usuário'}
             </DialogTitle>
-            <div className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full border">
+            <div className='bg-muted/50 flex items-center gap-2 rounded-full border px-3 py-1.5'>
               <FormField
                 control={form.control}
                 name='status'
@@ -166,11 +166,11 @@ export function UsersActionDialog({
                       field.onChange(checked ? 'active' : 'inactive')
                     }
                     disabled={readOnly || isLoading}
-                    className="data-[state=checked]:bg-green-500"
+                    className='data-[state=checked]:bg-green-500'
                   />
                 )}
               />
-              <Label className="text-sm font-medium cursor-pointer">
+              <Label className='cursor-pointer text-sm font-medium'>
                 {form.watch('status') === 'active' ? 'Ativo' : 'Inativo'}
               </Label>
             </div>
