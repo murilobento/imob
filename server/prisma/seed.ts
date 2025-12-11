@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { prisma } from '../db'
 import { auth } from '../auth'
 

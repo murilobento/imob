@@ -12,6 +12,7 @@ export function CompanyLogo({
     className,
     showName = true,
     size = 'md',
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     variant = 'default',
     ...props
 }: CompanyLogoProps) {

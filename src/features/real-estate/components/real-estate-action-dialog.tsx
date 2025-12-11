@@ -245,15 +245,15 @@ export function RealEstateActionDialog({ currentRow, open, onOpenChange, readOnl
             }
             onOpenChange(false)
             onSuccess?.()
-        } catch (err) {
+        } catch (_err) {
             toast.error('Erro ao salvar imóvel')
         } finally {
             setIsLoading(false)
         }
     }
 
-    const handleCepBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-        const cep = e.target.value.replace(/\D/g, '')
+    const fetchAddressByCep = async (cepValue: string) => {
+        const cep = cepValue.replace(/\D/g, '')
         if (cep.length === 8) {
             try {
                 const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
@@ -270,6 +270,7 @@ export function RealEstateActionDialog({ currentRow, open, onOpenChange, readOnl
             }
         }
     }
+
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -519,7 +520,7 @@ export function RealEstateActionDialog({ currentRow, open, onOpenChange, readOnl
                                                             value={field.value || ''}
                                                             onChange={e => {
                                                                 field.onChange(maskCEP(e.target.value))
-                                                                if (e.target.value.length >= 9) handleCepBlur({ target: { value: e.target.value } } as any)
+                                                                if (e.target.value.length >= 9) fetchAddressByCep(e.target.value)
                                                             }}
                                                             readOnly={readOnly}
                                                         />

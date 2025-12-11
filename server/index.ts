@@ -252,7 +252,6 @@ app.post('/api/customers', async (c) => {
 app.patch('/api/customers/:id', async (c) => {
   const id = c.req.param('id')
   const body = await c.req.json()
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id: _id, created_at, updated_at, ...updateData } = body
 
   const customer = await prisma.customers.update({
@@ -386,7 +385,6 @@ app.post('/api/real-estate', async (c) => {
 app.patch('/api/real-estate/:id', async (c) => {
   const id = c.req.param('id')
   const body = await c.req.json()
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id: _id, created_at, updated_at, customers, owner_name, ...updateData } = body
 
   // We need to filter out 'customers' and 'owner_name' as they are not in the table
