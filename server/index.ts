@@ -352,6 +352,27 @@ app.get('/api/real-estate', async (c) => {
   return c.json(formatted)
 })
 
+app.get('/api/real-estate/:id', async (c) => {
+  const id = c.req.param('id')
+  const realEstate = await prisma.real_estate.findUnique({
+    where: { id },
+    include: {
+      customers: {
+        select: { name: true }
+      }
+    }
+  })
+
+  if (!realEstate) {
+    return c.json({ error: 'Property not found' }, 404)
+  }
+
+  return c.json({
+    ...realEstate,
+    owner_name: realEstate.customers?.name || null
+  })
+})
+
 app.post('/api/real-estate', async (c) => {
   const body = await c.req.json()
   const {

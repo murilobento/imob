@@ -14,7 +14,7 @@ import { CustomersProvider } from './components/customers-provider'
 import { CustomersTable } from './components/customers-table'
 import { type Customer } from './data/schema'
 
-const route = getRouteApi('/_authenticated/customers/')
+const route = getRouteApi('/admin/customers/')
 
 export function Customers() {
   const search = route.useSearch()

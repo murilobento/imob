@@ -19,30 +19,31 @@ export const sidebarData: SidebarData = {
       items: [
         {
           title: 'Dashboard',
-          url: '/',
+          url: '/admin',
           icon: LayoutDashboard,
         },
         {
           title: 'Usuários',
-          url: '/users',
+          url: '/admin/users',
           icon: ShieldUser,
         },
         {
           title: 'Clientes',
-          url: '/customers',
+          url: '/admin/customers',
           icon: Users,
         },
         {
           title: 'Imóveis',
-          url: '/real-estate',
+          url: '/admin/real-estate',
           icon: Building2,
         },
         {
           title: 'Configurações da Empresa',
-          url: '/company-settings',
+          url: '/admin/company-settings',
           icon: Settings,
         },
       ],
     },
   ],
 }
+

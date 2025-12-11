@@ -8,7 +8,7 @@ const realEstateSearchSchema = z.object({
   title: z.string().optional().catch(''),
 })
 
-export const Route = createFileRoute('/_authenticated/real-estate/')({
+export const Route = createFileRoute('/admin/real-estate/')({
   validateSearch: realEstateSearchSchema,
   component: RealEstate,
 })

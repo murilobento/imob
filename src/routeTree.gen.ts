@@ -9,8 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
+import { Route as siteRouteRouteImport } from './routes/(site)/route'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as siteIndexRouteImport } from './routes/(site)/index'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors404RouteImport } from './routes/(errors)/404'
@@ -19,19 +21,31 @@ import { Route as errors401RouteImport } from './routes/(errors)/401'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authOtpRouteImport } from './routes/(auth)/otp'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
-import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
-import { Route as AuthenticatedRealEstateIndexRouteImport } from './routes/_authenticated/real-estate/index'
-import { Route as AuthenticatedCustomersIndexRouteImport } from './routes/_authenticated/customers/index'
-import { Route as AuthenticatedCompanySettingsIndexRouteImport } from './routes/_authenticated/company-settings/index'
+import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
+import { Route as AdminRealEstateIndexRouteImport } from './routes/admin/real-estate/index'
+import { Route as AdminCustomersIndexRouteImport } from './routes/admin/customers/index'
+import { Route as AdminCompanySettingsIndexRouteImport } from './routes/admin/company-settings/index'
+import { Route as siteImoveisIndexRouteImport } from './routes/(site)/imoveis/index'
+import { Route as siteImoveisIdRouteImport } from './routes/(site)/imoveis/$id'
 
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+const siteRouteRoute = siteRouteRouteImport.update({
+  id: '/(site)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const siteIndexRoute = siteIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => siteRouteRoute,
 } as any)
 const errors503Route = errors503RouteImport.update({
   id: '/(errors)/503',
@@ -73,31 +87,40 @@ const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
+const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
   id: '/users/',
   path: '/users/',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  getParentRoute: () => AdminRouteRoute,
 } as any)
-const AuthenticatedRealEstateIndexRoute =
-  AuthenticatedRealEstateIndexRouteImport.update({
-    id: '/real-estate/',
-    path: '/real-estate/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedCustomersIndexRoute =
-  AuthenticatedCustomersIndexRouteImport.update({
-    id: '/customers/',
-    path: '/customers/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedCompanySettingsIndexRoute =
-  AuthenticatedCompanySettingsIndexRouteImport.update({
+const AdminRealEstateIndexRoute = AdminRealEstateIndexRouteImport.update({
+  id: '/real-estate/',
+  path: '/real-estate/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminCustomersIndexRoute = AdminCustomersIndexRouteImport.update({
+  id: '/customers/',
+  path: '/customers/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminCompanySettingsIndexRoute =
+  AdminCompanySettingsIndexRouteImport.update({
     id: '/company-settings/',
     path: '/company-settings/',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    getParentRoute: () => AdminRouteRoute,
   } as any)
+const siteImoveisIndexRoute = siteImoveisIndexRouteImport.update({
+  id: '/imoveis/',
+  path: '/imoveis/',
+  getParentRoute: () => siteRouteRoute,
+} as any)
+const siteImoveisIdRoute = siteImoveisIdRouteImport.update({
+  id: '/imoveis/$id',
+  path: '/imoveis/$id',
+  getParentRoute: () => siteRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
+  '/admin': typeof AdminRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
   '/otp': typeof authOtpRoute
   '/sign-in': typeof authSignInRoute
@@ -106,11 +129,14 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
-  '/': typeof AuthenticatedIndexRoute
-  '/company-settings': typeof AuthenticatedCompanySettingsIndexRoute
-  '/customers': typeof AuthenticatedCustomersIndexRoute
-  '/real-estate': typeof AuthenticatedRealEstateIndexRoute
-  '/users': typeof AuthenticatedUsersIndexRoute
+  '/': typeof siteIndexRoute
+  '/admin/': typeof AdminIndexRoute
+  '/imoveis/$id': typeof siteImoveisIdRoute
+  '/imoveis': typeof siteImoveisIndexRoute
+  '/admin/company-settings': typeof AdminCompanySettingsIndexRoute
+  '/admin/customers': typeof AdminCustomersIndexRoute
+  '/admin/real-estate': typeof AdminRealEstateIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordRoute
@@ -121,15 +147,19 @@ export interface FileRoutesByTo {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
-  '/': typeof AuthenticatedIndexRoute
-  '/company-settings': typeof AuthenticatedCompanySettingsIndexRoute
-  '/customers': typeof AuthenticatedCustomersIndexRoute
-  '/real-estate': typeof AuthenticatedRealEstateIndexRoute
-  '/users': typeof AuthenticatedUsersIndexRoute
+  '/': typeof siteIndexRoute
+  '/admin': typeof AdminIndexRoute
+  '/imoveis/$id': typeof siteImoveisIdRoute
+  '/imoveis': typeof siteImoveisIndexRoute
+  '/admin/company-settings': typeof AdminCompanySettingsIndexRoute
+  '/admin/customers': typeof AdminCustomersIndexRoute
+  '/admin/real-estate': typeof AdminRealEstateIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/(site)': typeof siteRouteRouteWithChildren
+  '/admin': typeof AdminRouteRouteWithChildren
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/otp': typeof authOtpRoute
   '/(auth)/sign-in': typeof authSignInRoute
@@ -138,15 +168,19 @@ export interface FileRoutesById {
   '/(errors)/404': typeof errors404Route
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
-  '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/company-settings/': typeof AuthenticatedCompanySettingsIndexRoute
-  '/_authenticated/customers/': typeof AuthenticatedCustomersIndexRoute
-  '/_authenticated/real-estate/': typeof AuthenticatedRealEstateIndexRoute
-  '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/(site)/': typeof siteIndexRoute
+  '/admin/': typeof AdminIndexRoute
+  '/(site)/imoveis/$id': typeof siteImoveisIdRoute
+  '/(site)/imoveis/': typeof siteImoveisIndexRoute
+  '/admin/company-settings/': typeof AdminCompanySettingsIndexRoute
+  '/admin/customers/': typeof AdminCustomersIndexRoute
+  '/admin/real-estate/': typeof AdminRealEstateIndexRoute
+  '/admin/users/': typeof AdminUsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/admin'
     | '/forgot-password'
     | '/otp'
     | '/sign-in'
@@ -156,10 +190,13 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
-    | '/company-settings'
-    | '/customers'
-    | '/real-estate'
-    | '/users'
+    | '/admin/'
+    | '/imoveis/$id'
+    | '/imoveis'
+    | '/admin/company-settings'
+    | '/admin/customers'
+    | '/admin/real-estate'
+    | '/admin/users'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/forgot-password'
@@ -171,13 +208,17 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
-    | '/company-settings'
-    | '/customers'
-    | '/real-estate'
-    | '/users'
+    | '/admin'
+    | '/imoveis/$id'
+    | '/imoveis'
+    | '/admin/company-settings'
+    | '/admin/customers'
+    | '/admin/real-estate'
+    | '/admin/users'
   id:
     | '__root__'
-    | '/_authenticated'
+    | '/(site)'
+    | '/admin'
     | '/(auth)/forgot-password'
     | '/(auth)/otp'
     | '/(auth)/sign-in'
@@ -186,15 +227,19 @@ export interface FileRouteTypes {
     | '/(errors)/404'
     | '/(errors)/500'
     | '/(errors)/503'
-    | '/_authenticated/'
-    | '/_authenticated/company-settings/'
-    | '/_authenticated/customers/'
-    | '/_authenticated/real-estate/'
-    | '/_authenticated/users/'
+    | '/(site)/'
+    | '/admin/'
+    | '/(site)/imoveis/$id'
+    | '/(site)/imoveis/'
+    | '/admin/company-settings/'
+    | '/admin/customers/'
+    | '/admin/real-estate/'
+    | '/admin/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  siteRouteRoute: typeof siteRouteRouteWithChildren
+  AdminRouteRoute: typeof AdminRouteRouteWithChildren
   authForgotPasswordRoute: typeof authForgotPasswordRoute
   authOtpRoute: typeof authOtpRoute
   authSignInRoute: typeof authSignInRoute
@@ -207,19 +252,33 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/': {
-      id: '/_authenticated/'
+    '/(site)': {
+      id: '/(site)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof siteRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/(site)/': {
+      id: '/(site)/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof siteIndexRouteImport
+      parentRoute: typeof siteRouteRoute
     }
     '/(errors)/503': {
       id: '/(errors)/503'
@@ -277,59 +336,90 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/users/': {
-      id: '/_authenticated/users/'
+    '/admin/users/': {
+      id: '/admin/users/'
       path: '/users'
-      fullPath: '/users'
-      preLoaderRoute: typeof AuthenticatedUsersIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
-    '/_authenticated/real-estate/': {
-      id: '/_authenticated/real-estate/'
+    '/admin/real-estate/': {
+      id: '/admin/real-estate/'
       path: '/real-estate'
-      fullPath: '/real-estate'
-      preLoaderRoute: typeof AuthenticatedRealEstateIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      fullPath: '/admin/real-estate'
+      preLoaderRoute: typeof AdminRealEstateIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
-    '/_authenticated/customers/': {
-      id: '/_authenticated/customers/'
+    '/admin/customers/': {
+      id: '/admin/customers/'
       path: '/customers'
-      fullPath: '/customers'
-      preLoaderRoute: typeof AuthenticatedCustomersIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      fullPath: '/admin/customers'
+      preLoaderRoute: typeof AdminCustomersIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
-    '/_authenticated/company-settings/': {
-      id: '/_authenticated/company-settings/'
+    '/admin/company-settings/': {
+      id: '/admin/company-settings/'
       path: '/company-settings'
-      fullPath: '/company-settings'
-      preLoaderRoute: typeof AuthenticatedCompanySettingsIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      fullPath: '/admin/company-settings'
+      preLoaderRoute: typeof AdminCompanySettingsIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/(site)/imoveis/': {
+      id: '/(site)/imoveis/'
+      path: '/imoveis'
+      fullPath: '/imoveis'
+      preLoaderRoute: typeof siteImoveisIndexRouteImport
+      parentRoute: typeof siteRouteRoute
+    }
+    '/(site)/imoveis/$id': {
+      id: '/(site)/imoveis/$id'
+      path: '/imoveis/$id'
+      fullPath: '/imoveis/$id'
+      preLoaderRoute: typeof siteImoveisIdRouteImport
+      parentRoute: typeof siteRouteRoute
     }
   }
 }
 
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedCompanySettingsIndexRoute: typeof AuthenticatedCompanySettingsIndexRoute
-  AuthenticatedCustomersIndexRoute: typeof AuthenticatedCustomersIndexRoute
-  AuthenticatedRealEstateIndexRoute: typeof AuthenticatedRealEstateIndexRoute
-  AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+interface siteRouteRouteChildren {
+  siteIndexRoute: typeof siteIndexRoute
+  siteImoveisIdRoute: typeof siteImoveisIdRoute
+  siteImoveisIndexRoute: typeof siteImoveisIndexRoute
 }
 
-const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedCompanySettingsIndexRoute:
-    AuthenticatedCompanySettingsIndexRoute,
-  AuthenticatedCustomersIndexRoute: AuthenticatedCustomersIndexRoute,
-  AuthenticatedRealEstateIndexRoute: AuthenticatedRealEstateIndexRoute,
-  AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+const siteRouteRouteChildren: siteRouteRouteChildren = {
+  siteIndexRoute: siteIndexRoute,
+  siteImoveisIdRoute: siteImoveisIdRoute,
+  siteImoveisIndexRoute: siteImoveisIndexRoute,
 }
 
-const AuthenticatedRouteRouteWithChildren =
-  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+const siteRouteRouteWithChildren = siteRouteRoute._addFileChildren(
+  siteRouteRouteChildren,
+)
+
+interface AdminRouteRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminCompanySettingsIndexRoute: typeof AdminCompanySettingsIndexRoute
+  AdminCustomersIndexRoute: typeof AdminCustomersIndexRoute
+  AdminRealEstateIndexRoute: typeof AdminRealEstateIndexRoute
+  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
+}
+
+const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+  AdminCompanySettingsIndexRoute: AdminCompanySettingsIndexRoute,
+  AdminCustomersIndexRoute: AdminCustomersIndexRoute,
+  AdminRealEstateIndexRoute: AdminRealEstateIndexRoute,
+  AdminUsersIndexRoute: AdminUsersIndexRoute,
+}
+
+const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
+  AdminRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
-  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  siteRouteRoute: siteRouteRouteWithChildren,
+  AdminRouteRoute: AdminRouteRouteWithChildren,
   authForgotPasswordRoute: authForgotPasswordRoute,
   authOtpRoute: authOtpRoute,
   authSignInRoute: authSignInRoute,

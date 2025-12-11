@@ -14,7 +14,7 @@ import { RealEstateProvider } from './components/real-estate-provider'
 import { RealEstateTable } from './components/real-estate-table'
 import { type RealEstate } from './data/schema'
 
-const route = getRouteApi('/_authenticated/real-estate/')
+const route = getRouteApi('/admin/real-estate/')
 
 export function RealEstate() {
   const search = route.useSearch()
