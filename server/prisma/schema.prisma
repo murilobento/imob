@@ -1,0 +1,156 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime? @db.Timestamptz(6)
+  refreshTokenExpiresAt DateTime? @db.Timestamptz(6)
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt             DateTime  @db.Timestamptz(6)
+  user                  user      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId])
+}
+
+model company_settings {
+  id                 Int       @id @default(autoincrement())
+  nome_fantasia      String?
+  razao_social       String?
+  cnpj               String?
+  inscricao_estadual String?
+  cep                String?
+  logradouro         String?
+  numero             String?
+  complemento        String?
+  bairro             String?
+  cidade             String?
+  uf                 String?
+  email              String?
+  telefone           String?
+  instagram          String?
+  facebook           String?
+  tiktok             String?
+  whatsapp           String?
+  created_at         DateTime? @default(now()) @db.Timestamp(6)
+  updated_at         DateTime? @default(now()) @db.Timestamp(6)
+  logo               String?
+  creci              String?   @db.VarChar(50)
+}
+
+model customers {
+  id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name              String
+  type              String
+  document          String?
+  rg                String?
+  issuing_organ     String?
+  state_inscription String?
+  phone             String?
+  alt_phone         String?
+  email             String?
+  street            String?
+  number            String?
+  complement        String?
+  neighborhood      String?
+  city              String?
+  state             String?
+  zip               String?
+  interest          String?
+  property_type     String?
+  value_range       String?
+  observations      String?
+  created_at        DateTime?     @default(now()) @db.Timestamp(6)
+  updated_at        DateTime?     @default(now()) @db.Timestamp(6)
+  status            String        @default("active")
+  real_estate       real_estate[]
+}
+
+model real_estate {
+  id                String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code              String?
+  title             String
+  type              String
+  street            String?
+  number            String?
+  complement        String?
+  neighborhood      String?
+  city              String?
+  state             String?
+  zip               String?
+  finality          String?
+  situation         String?
+  built_area        Decimal?   @db.Decimal
+  total_area        Decimal?   @db.Decimal
+  bedrooms          Int?
+  suites            Int?
+  bathrooms         Int?
+  garage_spots      Int?
+  is_furnished      Boolean?   @default(false)
+  rental_value      Decimal?   @db.Decimal
+  sale_value        Decimal?   @db.Decimal
+  condominium_value Decimal?   @db.Decimal
+  iptu_value        Decimal?   @db.Decimal
+  owner_id          String?    @db.Uuid
+  registry_id       String?
+  registration_id   String?
+  legal_notes       String?
+  photos            String?
+  videos            String?
+  blueprints        String?
+  is_available      Boolean?   @default(true)
+  created_at        DateTime?  @default(now()) @db.Timestamp(6)
+  updated_at        DateTime?  @default(now()) @db.Timestamp(6)
+  customers         customers? @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model session {
+  id        String   @id
+  expiresAt DateTime @db.Timestamptz(6)
+  token     String   @unique
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @db.Timestamptz(6)
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId])
+}
+
+model user {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime  @default(now()) @db.Timestamptz(6)
+  status        String
+  account       account[]
+  session       session[]
+}
+
+model verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([identifier])
+}

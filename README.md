@@ -68,20 +68,51 @@ BETTER_AUTH_URL=http://localhost:3000
 
 _Dica: Você pode gerar uma chave secreta rodando `openssl rand -base64 32` no terminal._
 
-## 🗄️ Configuração do Banco de Dados
+## 🗄️ Configuração do Banco de Dados (Prisma ORM)
 
-Após configurar o `DATABASE_URL` no `server/.env`, execute as migrações para criar as tabelas necessárias:
+### 1. Inicializar Prisma
 
-```bash
-# Executar a partir da raiz do projeto
-pnpm db:migrate
-```
-
-Para popular o banco com dados iniciais (se disponível):
+Após instalar as dependências, gere o cliente do Prisma:
 
 ```bash
-pnpm --filter auth-server run db:seed
+cd server
+npx prisma generate
 ```
+
+### 2. Sincronizar Banco de Dados
+
+Para criar as tabelas no banco de dados baseando-se no schema do Prisma:
+
+```bash
+cd server
+npx prisma db push
+```
+
+### 3. Zerar e Popular Banco de Dados (Reset & Seed)
+
+Para **apagar todos os dados**, recriar as tabelas e inserir o usuário administrador padrão:
+
+```bash
+cd server
+npx prisma db seed
+```
+
+⚠️ **Atenção:** Este comando apaga todos os dados do banco!
+
+**Credenciais do Admin Criado:**
+- **Email:** `admin@admin.com`
+- **Senha:** `admin123`
+
+### 4. Criar e Aplicar Migrações (Desenvolvimento)
+
+Para criar uma nova migração baseada em alterações no `schema.prisma`:
+
+```bash
+cd server
+npx prisma migrate dev --name nome_da_migracao
+```
+
+Isso irá gerar arquivos SQL na pasta `server/prisma/migrations` e aplicá-los ao banco.
 
 ## ▶️ Executando o Projeto
 
