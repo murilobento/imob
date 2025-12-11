@@ -1,4 +1,4 @@
-import { RealEstate } from '@/features/real-estate/data/schema'
+import type { RealEstate } from '@/features/real-estate/data/schema'
 
 // Re-export for site usage
 export type Property = RealEstate

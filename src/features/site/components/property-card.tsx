@@ -15,7 +15,10 @@ const formatPrice = (value: number | string | null | undefined): string => {
     return numValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
 
+import { useState } from 'react'
+
 export function PropertyCard({ property, className }: PropertyCardProps) {
+    const [now] = useState(() => Date.now())
     const isRent = property.finality === 'RENT'
     const price = isRent ? property.rental_value : property.sale_value
     const priceSuffix = isRent ? '/mês' : ''
@@ -62,7 +65,7 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
                     </span>
                     {property.created_at &&
                         new Date(property.created_at).getTime() >
-                        Date.now() - 7 * 24 * 60 * 60 * 1000 && (
+                        now - 7 * 24 * 60 * 60 * 1000 && (
                             <span className="rounded-md bg-green-500 px-2.5 py-1 text-xs font-semibold text-white">
                                 Novo
                             </span>

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from '@tanstack/react-router'
+import { useState } from 'react'
 import {
     MapPin,
     Bed,
@@ -36,6 +37,7 @@ const formatPrice = (value: number | string | null | undefined): string => {
 export function PropertyDetails() {
     const { id } = useParams({ from: '/(site)/imoveis/$id' })
     const { settings } = useCompanySettings()
+    const [now] = useState(() => Date.now())
 
     const whatsappNumber = settings?.whatsapp?.replace(/\D/g, '') || '5518999999999'
     const whatsappUrl = `https://wa.me/${whatsappNumber}`
@@ -47,7 +49,7 @@ export function PropertyDetails() {
     })
 
     const { data: similarProperties = [] } = useQuery({
-        queryKey: ['similar-properties', id, property?.type, property?.finality],
+        queryKey: ['similar-properties', id, property?.type, property?.finality, property],
         queryFn: () => (property ? getSimilarProperties(property, 4) : []),
         enabled: !!property,
     })
@@ -174,15 +176,14 @@ export function PropertyDetails() {
                                     {propertyTypeLabels[property.type]}
                                 </span>
                                 <span
-                                    className={`rounded-full px-3 py-1 text-xs font-semibold text-white ${
-                                        isRent ? 'bg-orange-500' : 'bg-green-600'
-                                    }`}
+                                    className={`rounded-full px-3 py-1 text-xs font-semibold text-white ${isRent ? 'bg-orange-500' : 'bg-green-600'
+                                        }`}
                                 >
                                     {propertyFinalityLabels[property.finality]}
                                 </span>
                                 {property.created_at &&
                                     new Date(property.created_at).getTime() >
-                                        Date.now() - 7 * 24 * 60 * 60 * 1000 && (
+                                    now - 7 * 24 * 60 * 60 * 1000 && (
                                         <span className="rounded-full bg-blue-500 px-3 py-1 text-xs font-semibold text-white">
                                             Novo
                                         </span>
@@ -198,7 +199,7 @@ export function PropertyDetails() {
                                     {property.neighborhood}, {property.city} - {property.state}
                                 </span>
                             </div>
-                            
+
                             {/* Quick actions */}
                             <div className="mt-4 flex flex-wrap gap-2">
                                 <Button
@@ -220,7 +221,7 @@ export function PropertyDetails() {
                                 </Button>
                             </div>
                         </div>
-                        
+
                         {/* Price card */}
                         <div className="rounded-xl bg-gradient-to-br from-[#1e3a5f] to-[#2d4a6f] p-6 text-white lg:min-w-[280px]">
                             <p className="text-sm opacity-80">
@@ -420,7 +421,7 @@ Os quartos são espaçosos, sendo a suíte master com closet e banheira de hidro
                         <div className="sticky top-24 space-y-6">
                             {/* Contact Form */}
                             <ContactForm propertyTitle={property.title} />
-                            
+
                             {/* Schedule Visit Card */}
                             <div className="rounded-xl bg-white p-6 shadow-sm">
                                 <h3 className="mb-4 flex items-center gap-2 font-semibold text-gray-900">
@@ -470,7 +471,7 @@ Os quartos são espaçosos, sendo a suíte master com closet e banheira de hidro
                                 <PropertyCard key={p.id} property={p} />
                             ))}
                         </div>
-                        
+
                         <div className="mt-6 text-center sm:hidden">
                             <a
                                 href="/imoveis"

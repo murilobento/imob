@@ -1,8 +1,7 @@
 import { Search, SlidersHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import type { PropertyFilters } from '../types'
-import { propertyTypeLabels } from '../types'
+import { propertyTypeLabels, type PropertyFilters } from '../types'
 
 interface SearchFiltersProps {
     filters: PropertyFilters

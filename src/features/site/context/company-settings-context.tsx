@@ -29,6 +29,7 @@ export function CompanySettingsProvider({ children }: { children: ReactNode }) {
     )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useCompanySettings() {
     return useContext(CompanySettingsContext)
 }
