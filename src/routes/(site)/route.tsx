@@ -1,6 +1,8 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { SiteNavbar } from '@/features/site/components/site-navbar'
 import { SiteFooter } from '@/features/site/components/site-footer'
+import { CompanySettingsProvider } from '@/features/site/context/company-settings-context'
+import { DynamicTitle } from '@/components/shared/dynamic-title'
 
 export const Route = createFileRoute('/(site)')({
   component: SiteLayout,
@@ -8,12 +10,15 @@ export const Route = createFileRoute('/(site)')({
 
 function SiteLayout() {
   return (
-    <div className="flex min-h-screen flex-col bg-white font-sans">
-      <SiteNavbar />
-      <main className="flex-1">
-        <Outlet />
-      </main>
-      <SiteFooter />
-    </div>
+    <CompanySettingsProvider>
+      <DynamicTitle />
+      <div className="flex min-h-screen flex-col bg-white font-sans">
+        <SiteNavbar />
+        <main className="flex-1">
+          <Outlet />
+        </main>
+        <SiteFooter />
+      </div>
+    </CompanySettingsProvider>
   )
 }

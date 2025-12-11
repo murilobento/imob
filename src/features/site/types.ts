@@ -51,3 +51,27 @@ export const propertySituationLabels: Record<string, string> = {
     OCCUPIED: 'Ocupado',
     UNAVAILABLE: 'Indisponível',
 }
+
+// Company Settings type for site
+export interface CompanySettings {
+    id: number
+    nome_fantasia: string | null
+    razao_social: string | null
+    cnpj: string | null
+    inscricao_estadual: string | null
+    cep: string | null
+    logradouro: string | null
+    numero: string | null
+    complemento: string | null
+    bairro: string | null
+    cidade: string | null
+    uf: string | null
+    email: string | null
+    telefone: string | null
+    instagram: string | null
+    facebook: string | null
+    tiktok: string | null
+    whatsapp: string | null
+    logo: string | null
+    creci: string | null
+}

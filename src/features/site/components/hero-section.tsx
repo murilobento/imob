@@ -1,10 +1,18 @@
 import { useState } from 'react'
 import { Search, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useCompanySettings } from '../context/company-settings-context'
+import { IconWhatsapp } from '@/assets/brand-icons/icon-whatsapp'
 
 export function HeroSection() {
     const [search, setSearch] = useState('')
     const [finality, setFinality] = useState<'SALE' | 'RENT'>('SALE')
+    const { settings } = useCompanySettings()
+
+    const companyName = settings?.nome_fantasia || 'JR Imóveis'
+    const cidade = settings?.cidade || 'Regente Feijó'
+    const whatsappNumber = settings?.whatsapp?.replace(/\D/g, '') || '5518999999999'
+    const whatsappUrl = `https://wa.me/${whatsappNumber}`
 
     const handleSearch = () => {
         const params = new URLSearchParams()
@@ -30,7 +38,7 @@ export function HeroSection() {
             <div className="relative mx-auto flex min-h-[600px] max-w-7xl flex-col justify-center px-4 py-20 sm:px-6 lg:px-8">
                 <div className="max-w-2xl">
                     <p className="mb-4 text-sm font-medium uppercase tracking-wider text-[#3b82f6]">
-                        JR Imóveis • Premium Real Estate
+                        {companyName} • Premium Real Estate
                     </p>
                     <h1 className="mb-6 text-4xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">
                         O imóvel dos seus sonhos,
@@ -42,7 +50,7 @@ export function HeroSection() {
                     <p className="mb-8 max-w-lg text-lg text-gray-300">
                         Curadoria especializada de imóveis de alto padrão. Segurança,
                         transparência e atendimento premium para você encontrar seu novo lar
-                        em Regente Feijó.
+                        em {cidade}.
                     </p>
 
                     <div className="flex flex-wrap gap-4">
@@ -57,10 +65,9 @@ export function HeroSection() {
                             size="lg"
                             variant="outline"
                             className="border-white/30 bg-white/10 text-white hover:bg-white/20"
-                            onClick={() =>
-                                window.open('https://wa.me/5518999999999', '_blank')
-                            }
+                            onClick={() => window.open(whatsappUrl, '_blank')}
                         >
+                            <IconWhatsapp className="mr-2 h-4 w-4" />
                             Fale com Consultor
                         </Button>
                     </div>

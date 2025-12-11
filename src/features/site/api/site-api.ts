@@ -1,6 +1,6 @@
 import axios from 'axios'
 import type { RealEstate } from '@/features/real-estate/data/schema'
-import type { PropertyFilters } from '../types'
+import type { PropertyFilters, CompanySettings } from '../types'
 
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
@@ -94,4 +94,15 @@ export async function getSimilarProperties(
 
     // Exclude current property
     return response.data.filter((p) => p.id !== property.id).slice(0, limit)
+}
+
+
+// Get company settings for public site
+export async function getCompanySettings(): Promise<CompanySettings | null> {
+    try {
+        const response = await axios.get(`${API_BASE}/api/company-settings`)
+        return response.data
+    } catch {
+        return null
+    }
 }

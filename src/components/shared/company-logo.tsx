@@ -42,7 +42,7 @@ export function CompanyLogo({
       .slice(0, 2)
   }
 
-  const companyName = company?.nome_fantasia || 'Shadcn Admin'
+  const companyName = company?.nome_fantasia || 'JR Imóveis'
   const initials = getInitials(companyName)
 
   const sizeClasses = {

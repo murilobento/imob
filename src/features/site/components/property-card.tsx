@@ -8,6 +8,13 @@ interface PropertyCardProps {
     className?: string
 }
 
+const formatPrice = (value: number | string | null | undefined): string => {
+    if (value === null || value === undefined) return 'R$ ---'
+    const numValue = typeof value === 'string' ? parseFloat(value) : value
+    if (isNaN(numValue)) return 'R$ ---'
+    return numValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+}
+
 export function PropertyCard({ property, className }: PropertyCardProps) {
     const isRent = property.finality === 'RENT'
     const price = isRent ? property.rental_value : property.sale_value
@@ -87,7 +94,7 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
                 {/* Price */}
                 <div className="mt-3">
                     <span className="text-xl font-bold text-[#1e3a5f]">
-                        R$ {price?.toLocaleString('pt-BR') || '---'}
+                        {formatPrice(price)}
                     </span>
                     {priceSuffix && (
                         <span className="text-sm text-gray-500">{priceSuffix}</span>
@@ -121,6 +128,13 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
                             <span>{property.total_area}m²</span>
                         </div>
                     )}
+                </div>
+
+                {/* Ver Detalhes Button */}
+                <div className="mt-4">
+                    <span className="block w-full rounded-lg bg-[#1e3a5f] py-2 text-center text-sm font-medium text-white transition-colors group-hover:bg-[#2d4a6f]">
+                        Ver Detalhes
+                    </span>
                 </div>
             </div>
         </a>

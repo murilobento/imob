@@ -5,6 +5,7 @@ import { HeroSection } from '../components/hero-section'
 import { FeaturesSection } from '../components/features-section'
 import { TestimonialsSection } from '../components/testimonials-section'
 import { PropertyCard } from '../components/property-card'
+import { ScrollToTopButton } from '../components/scroll-to-top-button'
 import { getFeaturedProperties } from '../api/site-api'
 
 export function Home() {
@@ -22,7 +23,7 @@ export function Home() {
             <FeaturesSection />
 
             {/* Featured Properties Section */}
-            <section className="py-20">
+            <section id="destaques" className="scroll-mt-20 py-20">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-12 flex items-center justify-between">
                         <div>
@@ -69,6 +70,9 @@ export function Home() {
 
             {/* Testimonials Section */}
             <TestimonialsSection />
+
+            {/* Scroll to Top Button */}
+            <ScrollToTopButton />
         </>
     )
 }

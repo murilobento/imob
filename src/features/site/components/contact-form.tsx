@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Phone, MessageSquare, Send } from 'lucide-react'
+import { MessageSquare, Send } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
+import { IconWhatsapp } from '@/assets/brand-icons/icon-whatsapp'
 
 interface ContactFormProps {
     propertyTitle?: string
@@ -130,7 +131,7 @@ export function ContactForm({
                 className="w-full border-green-600 text-green-600 hover:bg-green-50"
                 onClick={handleWhatsApp}
             >
-                <Phone className="mr-2 h-4 w-4" />
+                <IconWhatsapp className="mr-2 h-4 w-4" />
                 Falar no WhatsApp
             </Button>
 
